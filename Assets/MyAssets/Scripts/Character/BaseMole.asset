@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f31ebaf8d2f9854d8a84f15ace0ab1d, type: 3}
+  m_Name: BaseMole
+  m_EditorClassIdentifier: 
+  _Name: Base Mole
+  _characterSuit: {fileID: 9083139120143604789, guid: a8f699c7cfddbef44a32383b4bfb8e9c, type: 3}
+  _PreviewModel: {fileID: 5464366302401614345, guid: a8f699c7cfddbef44a32383b4bfb8e9c, type: 3}
