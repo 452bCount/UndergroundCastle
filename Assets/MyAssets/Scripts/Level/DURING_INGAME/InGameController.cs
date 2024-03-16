@@ -7,6 +7,20 @@ using Sirenix.OdinInspector;
 
 namespace MoleSurvivor
 {
+    [System.Serializable]
+    public class PlayerCustom
+    {
+        public PlayerController playerController;
+        public PlayerHud playerHealth;
+        public Color playerColor;
+
+        public int playerStartPosition;
+        public float playerRespawnTimer;
+        public float PlayerRespawnPosition;
+        public bool playerDeath;
+        public bool playerAlive;
+    }
+
     public class InGameController : MonoBehaviour
     {
         //-----------------------------------------------------------------------------------------------------------------------------------------
@@ -261,16 +275,7 @@ namespace MoleSurvivor
         //-----------------------------------------------------------------------------------------------------------------------------------------
         // OTHER SETTINGS
         #region OTHER SETTINGS
-        [ReadOnly] public List<PlayerController> playersCollection;
-        [ReadOnly] public List<PlayerHud> playersHealth;
-        [ReadOnly] public List<Color> playersColor;
-
-        [ReadOnly] public List<int> playersStartPosition;
-        [ReadOnly] public List<float> playersRespawnTimer;
-        [ReadOnly] public List<bool> playersDeath;
-        [ReadOnly] public List<float> PlayersRespawnPosition;
-        [ReadOnly] public List<bool> playersAlive;
-        [ReadOnly] public List<int> playersPosition;
+        [ReadOnly] public List<PlayerCustom> playerEach;
 
         [ReadOnly] public Vector3 respawnPosition;
         [ReadOnly] public Vector3 deathPosition;
@@ -279,34 +284,47 @@ namespace MoleSurvivor
         [ReadOnly] public List<Transform> playersFinishPlace;
         #endregion
         //-----------------------------------------------------------------------------------------------------------------------------------------
-
-        // Start Player Function
-
-        void AddPlayersToList(PlayerController player, PlayerHud pHealth, Color pColor)
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // START PLAYER FUNCTION
+        #region START PLAYER FUNCTION
+        void SetStartPlayerCustom(PlayerCustom playerCustom, PlayerController player, PlayerHud pHealth, Color pColor, int pStartPosition, float pRespawnPosition, int pGamepad)
         {
-            // Add players to List
-            playersCollection.Add(player);
-            // Add players Health to List
-            playersHealth.Add(pHealth);
-            // Add players Color to List
-            playersColor.Add(pColor);
-        }
+            playerCustom.playerController = player;
+            playerCustom.playerHealth = pHealth;
+            playerCustom.playerColor = pColor;
 
-        void SetStartPlayer(PlayerController player, int pPosition, float pMoveSpeed, float pRotateSpeed, float pRotateDelay, bool solo, float pHealth, PlayerHud pHud, Color pColor)
-        {
-            player.transform.position = new Vector3(pPosition, setAllPlayerHeight, player.transform.position.z);
+            // Set Player Position
+            playerCustom.playerStartPosition = pStartPosition;
+            // Set Player is ALive
+            playerCustom.playerAlive = true;
+            // Set Controller
+            playerCustom.playerController.AssignGamepad(pGamepad);
+            // Set Player GameObject Active
+            playerCustom.playerController.gameObject.SetActive(playerCustom.playerAlive);
+            // Set Player Start
+            if (playerCustom.playerAlive == true) 
+            {
+                playerCustom.playerController.transform.position = new Vector3(playerCustom.playerStartPosition, setAllPlayerHeight, player.transform.position.z);
 
-            player.currentHealth = pHealth;
-            player.moveSpeed = pMoveSpeed;
-            player.rotateDuration = pRotateSpeed;
-            player.rotateDelay = pRotateDelay;
+                playerCustom.playerController.currentHealth = playerHealth;
+                playerCustom.playerController.moveSpeed = playerMoveSpeed;
+                playerCustom.playerController.rotateDuration = playerRotateSpeed;
+                playerCustom.playerController.rotateDelay = playerRotateDelay;
 
-            player.singleMovement = solo;
+                playerCustom.playerController.singleMovement = soloMode;
 
-            player.playerColor = pColor;
-            player.playerHud = pHud;
+                playerCustom.playerController.playerColor = pColor;
+                playerCustom.playerController.playerHud = playerCustom.playerHealth;
 
-            player.SetStart();
+                playerCustom.playerController.SetStart();
+            }
+            // Set Player is Dead
+            playerCustom.playerDeath = false;
+            // Set Player Spawn Position
+            playerCustom.PlayerRespawnPosition = pRespawnPosition;
+            // Set the player Spawn Timer
+            playerCustom.playerRespawnTimer = playerRespawnTimer;
         }
 
         void SetPlayers(int playersActive)
@@ -315,172 +333,45 @@ namespace MoleSurvivor
 
             for (int i = 0; i < playersActive; i++)
             {
-                playersStartPosition.Add(0);
-                playersRespawnTimer.Add(0);
-                playersDeath.Add(false);
-                PlayersRespawnPosition.Add(0);
-                playersAlive.Add(true);
-                playersPosition.Add(0);
+                playerEach.Add(new PlayerCustom());
             }
 
             if (playersActive == 1)
             {
-                // Add players to List
-                AddPlayersToList(player1, player1Health, player1Color); // Player 1
-
-                // Set Player Position
-                playersStartPosition[0] = only1Player;
-                playersAlive[0] = true;
-
-                // Set Controller
-                playersCollection[0].AssignGamepad(0);
-
-                // Update PlayerControllers' active status based on the active flags
-                playersCollection[0].gameObject.SetActive(playersAlive[0]);
-
-                // Set Player Start
-                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
-
-                // Set Player Spawn Position
-                PlayersRespawnPosition[0] = only1player1RespawnLocation;
-
-                // Set the player Spawn Timer
-                playersRespawnTimer[0] = playerRespawnTimer;
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only1Player, only1player1RespawnLocation, 0);
             }
             else if (playersActive == 2)
             {
-                // Add players to List
-                AddPlayersToList(player1, player1Health, player1Color); // Player 1
-                AddPlayersToList(player2, player2Health, player2Color); // Player 2
-
-                // Set Player Position
-                playersStartPosition[0] = only2Player1;
-                playersStartPosition[1] = only2Player2;
-                playersAlive[0] =
-                playersAlive[1] = true;
-
-                // Set Controller
-                playersCollection[0].AssignGamepad(0);
-                playersCollection[1].AssignGamepad(1);
-
-                // Update PlayerControllers' active status based on the active flags
-                playersCollection[0].gameObject.SetActive(playersAlive[0]);
-                playersCollection[1].gameObject.SetActive(playersAlive[1]);
-
-                // Set Player Start
-                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
-                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
-
-                // Set Player Spawn Position
-                PlayersRespawnPosition[0] = only2player1RespawnLocation;
-                PlayersRespawnPosition[1] = only2player2RespawnLocation;
-
-                // Set the player Spawn Timer
-                playersRespawnTimer[0] = playerRespawnTimer;
-                playersRespawnTimer[1] = playerRespawnTimer;
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only2Player1, only2player1RespawnLocation, 0);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only2Player2, only2player2RespawnLocation, 1);
             }
             else if (playersActive == 3)
             {
-                // Add players to List
-                AddPlayersToList(player1, player1Health, player1Color); // Player 1
-                AddPlayersToList(player2, player2Health, player2Color); // Player 2
-                AddPlayersToList(player3, player3Health, player3Color); // Player 3
-
-                // Set Player Position
-                playersStartPosition[0] = only3Player1;
-                playersStartPosition[1] = only3Player2;
-                playersStartPosition[2] = only3Player3;
-                playersAlive[0] =
-                playersAlive[1] =
-                playersAlive[2] = true;
-
-                // Set Controller
-                playersCollection[0].AssignGamepad(0);
-                playersCollection[1].AssignGamepad(1);
-                playersCollection[2].AssignGamepad(2);
-
-                // Update PlayerControllers' active status based on the active flags
-                playersCollection[0].gameObject.SetActive(playersAlive[0]);
-                playersCollection[1].gameObject.SetActive(playersAlive[1]);
-                playersCollection[2].gameObject.SetActive(playersAlive[2]);
-
-                // Set Player Start
-                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
-                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
-                if (playersAlive[2] == true) { SetStartPlayer(playersCollection[2], playersStartPosition[2], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player3Health, player3Color); }
-
-                // Set Player Spawn Position
-                PlayersRespawnPosition[0] = only3player1RespawnLocation;
-                PlayersRespawnPosition[1] = only3player2RespawnLocation;
-                PlayersRespawnPosition[2] = only3player3RespawnLocation;
-
-                // Set the player Spawn Timer
-                playersRespawnTimer[0] = playerRespawnTimer;
-                playersRespawnTimer[1] = playerRespawnTimer;
-                playersRespawnTimer[2] = playerRespawnTimer;
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only3Player1, only3player1RespawnLocation, 0);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only3Player2, only3player2RespawnLocation, 1);
+                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only3Player3, only3player3RespawnLocation, 2);
             }
             else if (playersActive == 4)
             {
-                // Add players to List
-                AddPlayersToList(player1, player1Health, player1Color); // Player 1
-                AddPlayersToList(player2, player2Health, player2Color); // Player 2
-                AddPlayersToList(player3, player3Health, player3Color); // Player 3
-                AddPlayersToList(player4, player4Health, player4Color); // Player 4
-
-                // Set Player Position
-                playersStartPosition[0] = only4Player1;
-                playersStartPosition[1] = only4Player2;
-                playersStartPosition[2] = only4Player3;
-                playersStartPosition[3] = only4Player4;
-                playersAlive[0] =
-                playersAlive[1] =
-                playersAlive[2] =
-                playersAlive[3] = true;
-
-                // Set Controller
-                playersCollection[0].AssignGamepad(0);
-                playersCollection[1].AssignGamepad(1);
-                playersCollection[2].AssignGamepad(2);
-                playersCollection[3].AssignGamepad(3);
-
-                // Update PlayerControllers' active status based on the active flags
-                playersCollection[0].gameObject.SetActive(playersAlive[0]);
-                playersCollection[1].gameObject.SetActive(playersAlive[1]);
-                playersCollection[2].gameObject.SetActive(playersAlive[2]);
-                playersCollection[3].gameObject.SetActive(playersAlive[3]);
-
-                // Set Player Start
-                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
-                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
-                if (playersAlive[2] == true) { SetStartPlayer(playersCollection[2], playersStartPosition[2], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player3Health, player3Color); }
-                if (playersAlive[3] == true) { SetStartPlayer(playersCollection[3], playersStartPosition[3], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player4Health, player4Color); }
-
-                // Set Player Spawn Position
-                PlayersRespawnPosition[0] = only4player1RespawnLocation;
-                PlayersRespawnPosition[1] = only4player2RespawnLocation;
-                PlayersRespawnPosition[2] = only4player3RespawnLocation;
-                PlayersRespawnPosition[3] = only4player4RespawnLocation;
-
-                // Set the player Spawn Timer
-                playersRespawnTimer[0] = playerRespawnTimer;
-                playersRespawnTimer[1] = playerRespawnTimer;
-                playersRespawnTimer[2] = playerRespawnTimer;
-                playersRespawnTimer[3] = playerRespawnTimer;
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only4Player1, only4player1RespawnLocation, 0);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only4Player2, only4player2RespawnLocation, 1);
+                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only4Player3, only4player3RespawnLocation, 2);
+                SetStartPlayerCustom(playerEach[3], player4, player4Health, player4Color, only4Player4, only4player4RespawnLocation, 3);
             }
         }
-
-        // Update Player Function
-
+        #endregion
+        // UPDATE PLATER FUNCTION
+        #region UPDATE PLATER FUNCTION
         void PlayersRespawn(int player)
         {
-            if (playersRespawnTimer[player] <= 0)
+            if (playerEach[player].playerRespawnTimer <= 0)
             {
-                playersCollection[player].transform.position = SnapToGrid(new Vector3(PlayersRespawnPosition[player], respawnPosition.y, playersCollection[player].transform.position.z));
-                playersCollection[player].transform.gameObject.SetActive(true);
-                playersCollection[player].IsCheckTile(SnapToGrid(playersCollection[player].transform.position));
-                playersAlive[player] = true;
-                playersRespawnTimer[player] = playerRespawnTimer;
-                playersDeath[player] = false;
+                playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(playerEach[player].PlayerRespawnPosition, respawnPosition.y, playerEach[player].playerController.transform.position.z));
+                playerEach[player].playerController.transform.gameObject.SetActive(true);
+                playerEach[player].playerController.IsCheckTile(SnapToGrid(playerEach[player].playerController.transform.position));
+                playerEach[player].playerAlive = true;
+                playerEach[player].playerRespawnTimer = playerRespawnTimer;
+                playerEach[player].playerDeath = false;
             }
         }
 
@@ -495,21 +386,23 @@ namespace MoleSurvivor
 
                 switch (player.playerId)
                 {
-                    case 0: playersAlive[0] = false; playersDeath[0] = true; break;
-                    case 1: playersAlive[1] = false; playersDeath[1] = true; break;
-                    case 2: playersAlive[2] = false; playersDeath[2] = true; break;
-                    case 3: playersAlive[3] = false; playersDeath[3] = true; break;
+                    case 0: playerEach[0].playerAlive = false; playerEach[0].playerDeath = true; break;
+                    case 1: playerEach[1].playerAlive = false; playerEach[1].playerDeath = true; break;
+                    case 2: playerEach[2].playerAlive = false; playerEach[2].playerDeath = true; break;
+                    case 3: playerEach[3].playerAlive = false; playerEach[3].playerDeath = true; break;
                     // Default case if needed
                     default: break;
                 }
             }
         }
+        #endregion
+        //-----------------------------------------------------------------------------------------------------------------------------------------
 
         private void Start()
         {
             //-----------------------------------------------------------------------------------------------------------------------------------------
-            // INSTANTIATE LEVEL
-
+            // INSTANTIATE LEVELS
+            #region INSTANTIATE LEVELS
             // First, ensure currentlevelSandwitch is properly initialized.
             currentlevelSandwitch = new Transform[levelSandwitch.Length];
 
@@ -525,18 +418,24 @@ namespace MoleSurvivor
             }
 
             currentlevelSandwitch[0].gameObject.SetActive(true);
-            //-----------------------------------------------------------------------------------------------------------------------------------------
-
+            #endregion
+            // INSTANTIATE FINISH LINE
+            #region INSTANTIATE FINISH LEVEL
             finishPosition = new Vector3(0, endGoal + playerFinishHeightLocation, inGameCamera.position.z);
             _instaFinishLine = Instantiate(finishLine);
             _instaFinishLine.parent = levelGridParent;
             _instaFinishLine.position = SnapToGrid(new Vector3(0, finishPosition.y, 0));
-
+            #endregion
+            // START COUNTDOWN
+            #region START COUNTDOWN
             StartCoroutine(CountdownRoutine(countdownStartValue, delayBetweenCountdown));
+            #endregion
+            //-----------------------------------------------------------------------------------------------------------------------------------------
         }
 
         void SetStartAfterCountdown()
         {
+            // Set how many players are active
             SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
@@ -557,64 +456,56 @@ namespace MoleSurvivor
                 if (playersActive == 1)
                 {
                     // Set Player Update
-                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
-
+                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
                     // Player Respawn
                     PlayersRespawn(0);
-
                     // Update each player's spawn timer if it's above 0
-                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
                 }
                 else if (playersActive == 2)
                 {
                     // Set Player Update
-                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
-                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
-
+                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
+                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
                     // Player Respawn
                     PlayersRespawn(0);
                     PlayersRespawn(1);
-
                     // Update each player's spawn timer if it's above 0
-                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
+                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
                 }
                 else if (playersActive == 3)
                 {
                     // Set Player Update
-                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
-                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
-                    if (playersAlive[2] == true) { playersCollection[2].SetUpdate(); SetPlayerDeath(playersCollection[2]); }
-
+                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
+                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
+                    if (playerEach[2].playerAlive == true) { playerEach[2].playerController.SetUpdate(); SetPlayerDeath(playerEach[2].playerController); }
                     // Player Respawn
                     PlayersRespawn(0);
                     PlayersRespawn(1);
                     PlayersRespawn(2);
-
                     // Update each player's spawn timer if it's above 0
-                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
-                    if (playersDeath[2] == true) { playersRespawnTimer[2] -= Time.deltaTime; PlayersRespawn(2); }
+                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
+                    if (playerEach[2].playerDeath == true) { playerEach[2].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(2); }
                 }
                 else if (playersActive == 4)
                 {
                     // Set Player Update
-                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
-                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
-                    if (playersAlive[2] == true) { playersCollection[2].SetUpdate(); SetPlayerDeath(playersCollection[2]); }
-                    if (playersAlive[3] == true) { playersCollection[3].SetUpdate(); SetPlayerDeath(playersCollection[3]); }
-
+                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
+                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
+                    if (playerEach[2].playerAlive == true) { playerEach[2].playerController.SetUpdate(); SetPlayerDeath(playerEach[2].playerController); }
+                    if (playerEach[3].playerAlive == true) { playerEach[3].playerController.SetUpdate(); SetPlayerDeath(playerEach[3].playerController); }
                     // Player Respawn
                     PlayersRespawn(0);
                     PlayersRespawn(1);
                     PlayersRespawn(2);
                     PlayersRespawn(3);
-
                     // Update each player's spawn timer if it's above 0
-                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
-                    if (playersDeath[2] == true) { playersRespawnTimer[2] -= Time.deltaTime; PlayersRespawn(2); }
-                    if (playersDeath[3] == true) { playersRespawnTimer[3] -= Time.deltaTime; PlayersRespawn(3); }
+                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
+                    if (playerEach[2].playerDeath == true) { playerEach[2].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(2); }
+                    if (playerEach[3].playerDeath == true) { playerEach[3].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(3); }
                 }
 
                 // Set the Level to false
