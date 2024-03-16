@@ -59,11 +59,15 @@ namespace MoleSurvivor
         [BoxGroup("BOX CAMERA HOLDER")]
         public Grid grid; // Reference to the isometric grid
         [BoxGroup("BOX CAMERA HOLDER")]
+        public Transform finishLine;
+        [BoxGroup("BOX CAMERA HOLDER")]
         public Vector2 _screenSpace;
         [BoxGroup("BOX CAMERA HOLDER")]
         public float vertical;
         [BoxGroup("BOX CAMERA HOLDER")]
         public float horizontal;
+
+        Transform _instaFinishLine;
         #endregion
 
         #region PLAYER SETTING INSPECTOR
@@ -148,15 +152,13 @@ namespace MoleSurvivor
         public float
         playerRespawnTimer;
 
-        [ReadOnly]
-        public float
+        float
         p1SpawnTimer,
         p2SpawnTimer,
         p3SpawnTimer,
         p4SpawnTimer;
 
-        [ReadOnly]
-        public bool
+        bool
         p1Death,
         p2Death,
         p3Death,
@@ -227,6 +229,10 @@ namespace MoleSurvivor
         public float playerDeathHeightLocation;
 
         [BoxGroup("BOX PLAYER")]
+        [TitleGroup("BOX PLAYER/PLAYER BOUND LINE")]
+        public float playerBoundLocation;
+
+        [BoxGroup("BOX PLAYER")]
         [TitleGroup("BOX PLAYER/PLAYER FINISH LINE")]
         public float playerFinishHeightLocation;
 
@@ -262,6 +268,8 @@ namespace MoleSurvivor
         public bool soloMode;
         #endregion
 
+        public List<Transform> whatPlace;
+
         private void Start() 
         {
             // First, ensure currentlevelSandwitch is properly initialized.
@@ -279,6 +287,12 @@ namespace MoleSurvivor
             }
 
             currentlevelSandwitch[0].gameObject.SetActive(true);
+
+            finishPosition = new Vector3(0, endGoal + playerFinishHeightLocation, inGameCamera.position.z);
+            _instaFinishLine = Instantiate(finishLine);
+            _instaFinishLine.parent = levelGridParent;
+            _instaFinishLine.position = SnapToGrid(new Vector3(0, finishPosition.y, 0));
+
 
             if (player1 != null && p1Active) { player1.gameObject.SetActive(true); }
             if (player2 != null && p2Active) { player2.gameObject.SetActive(true); }
@@ -693,10 +707,18 @@ namespace MoleSurvivor
 
             Gizmos.color = Color.white;
 
-            finishPosition = new Vector3(0, levelSandwitch[levelSandwitch.Length - 1].position.y + playerFinishHeightLocation, inGameCamera.position.z);
-
-            Vector3 fPosition = new Vector3(0, levelSandwitch[0].position.y + playerFinishHeightLocation, inGameCamera.position.z);
+            Vector3 fPosition = new Vector3(0, inGameCamera.position.y + playerFinishHeightLocation, inGameCamera.position.z);
             Gizmos.DrawLine(fPosition + new Vector3(-horizontal, 0), fPosition + new Vector3(horizontal, 0));
+
+            //---------------------------------------------------------------------------------------
+
+            Gizmos.color = Color.blue;
+
+            Vector3 boundSidePositionLeft = new Vector3(-playerBoundLocation, inGameCamera.position.y , inGameCamera.position.z);
+            Gizmos.DrawLine(boundSidePositionLeft + new Vector3(0, -vertical), boundSidePositionLeft + new Vector3(0, vertical));
+
+            Vector3 boundSidePositionRight = new Vector3(playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);
+            Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
         }
 
     }
