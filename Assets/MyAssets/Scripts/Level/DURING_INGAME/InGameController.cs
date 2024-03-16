@@ -9,6 +9,10 @@ namespace MoleSurvivor
 {
     public class InGameController : MonoBehaviour
     {
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // MAKE THIS INTO INSTANCE
+        #region INSTANCE THIS CONTROLLER LEVEL SCRIPT
+        // Set this into an instance
         public static InGameController Instance { get; private set; }
 
         private void Awake()
@@ -19,14 +23,23 @@ namespace MoleSurvivor
             //If there is more than one instance, destroy the extra else Set the static instance to this instance
             if (Instance != null && Instance != this) { Destroy(this.gameObject); } else { Instance = this; }
         }
-
+        #endregion
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // THIS IS TO STOP THE UPDATE LIKE WHEN PAUSING THE GAME
+        #region SET PAUSE ACTIVE
         private bool setActiveUpdate;
-
+        #endregion
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // THIS PART INSTANTIATE THE LEVEL STAGE
         #region SANDWITCH LEVEL SETTING INSPECTOR
         [BoxGroup("BOX LEVEL SANDWITCH", false)]
         [Title("BOX LEVEL SANDWITCH/LEVEL SANDWITCH")]
         public Transform levelGridParent;
-        
+
         [Space]
 
         [BoxGroup("BOX LEVEL SANDWITCH")]
@@ -51,7 +64,10 @@ namespace MoleSurvivor
         Transform[] currentlevelSandwitch;
         int endGoal;
         #endregion
-
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // THIS IS TO SET UP THE CAMERA AND THE GRID
         #region CAMERA & GRID SETTING INSPECTOR
         [BoxGroup("BOX CAMERA HOLDER", false)]
         [TitleGroup("BOX CAMERA HOLDER/CAMERA & GRID")]
@@ -67,13 +83,16 @@ namespace MoleSurvivor
         [BoxGroup("BOX CAMERA HOLDER")]
         public float horizontal;
 
-        Transform _instaFinishLine;
+        Transform _instaFinishLine; // The instatiate Finish Line
         #endregion
-
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // THIS IS TO SET UP THE PLAYERS 1,2,3,4
         #region PLAYER SETTING INSPECTOR
         [BoxGroup("BOX PLAYER", false)]
         [TitleGroup("BOX PLAYER/CHECK PLAYER")]
-        public PlayerController 
+        public PlayerController
         player1,
         player2,
         player3,
@@ -81,7 +100,7 @@ namespace MoleSurvivor
 
         [BoxGroup("BOX PLAYER")]
         [TitleGroup("BOX PLAYER/PLAYER HUD")]
-        public PlayerHud 
+        public PlayerHud
         player1Health,
         player2Health,
         player3Health,
@@ -89,7 +108,7 @@ namespace MoleSurvivor
 
         [BoxGroup("BOX PLAYER")]
         [TitleGroup("BOX PLAYER/PLAYER COLOR")]
-        public Color 
+        public Color
         player1Color,
         player2Color,
         player3Color,
@@ -105,10 +124,10 @@ namespace MoleSurvivor
         public int
         setAllPlayerHeight;
 
-        [BoxGroup("BOX PLAYER/PLAYER START POSITION/Collapse Folder/Only have 1 Player")] 
+        [BoxGroup("BOX PLAYER/PLAYER START POSITION/Collapse Folder/Only have 1 Player")]
         [HideLabel]
         [SerializeField]
-        public int 
+        public int
         only1Player;
 
         [BoxGroup("BOX PLAYER/PLAYER START POSITION/Collapse Folder/Only have 2 Player")]
@@ -137,13 +156,6 @@ namespace MoleSurvivor
 
         //---------------------------------------------------------------------------------------------------------------------------------------
 
-        //[TitleGroup("BOX PLAYER/PLAYER START POSITION", "Set all the players start position depending on how many players")]
-        //[FoldoutGroup("BOX PLAYER/PLAYER START POSITION/Collapse Folder")]
-        //[BoxGroup("BOX PLAYER/PLAYER START POSITION/Collapse Folder/Set start height all Player")]
-
-        //[BoxGroup("BOX LEVEL SANDWITCH", false)]
-        //[Title("BOX LEVEL SANDWITCH/LEVEL SANDWITCH")]
-
         [FoldoutGroup("BOX PLAYER/PLAYER RESPAWN POSITION/Collapse Folder")]
         [TitleGroup("BOX PLAYER/PLAYER RESPAWN POSITION", "Set all the players respawn position")]
         [BoxGroup("BOX PLAYER/PLAYER RESPAWN POSITION/Collapse Folder/Player Respawn Timer")]
@@ -151,18 +163,6 @@ namespace MoleSurvivor
         [SerializeField]
         public float
         playerRespawnTimer;
-
-        float
-        p1SpawnTimer,
-        p2SpawnTimer,
-        p3SpawnTimer,
-        p4SpawnTimer;
-
-        bool
-        p1Death,
-        p2Death,
-        p3Death,
-        p4Death;
 
         [BoxGroup("BOX PLAYER/PLAYER RESPAWN POSITION/Collapse Folder/Player Height Respawn Location")]
         [HideLabel]
@@ -238,7 +238,7 @@ namespace MoleSurvivor
 
         [TitleGroup("BOX PLAYER/START SPEED & ROTATION", "Set all the players the Speed and Rotation on the start")]
         [BoxGroup("BOX PLAYER", false)]
-        public float 
+        public float
         playerMoveSpeed,
         playerRotateSpeed,
         playerRotateDelay;
@@ -248,30 +248,268 @@ namespace MoleSurvivor
         public float
         playerHealth;
 
-        //[TitleGroup("BOX PLAYER/CHECK PLAYER ACTIVE", "Set how many players in the game")]
-        //[BoxGroup("BOX PLAYER")]
-        [HideInInspector]
-        public bool 
-        p1Active,
-        p2Active,
-        p3Active,
-        p4Active;
-
         [TitleGroup("BOX PLAYER/CHECK PLAYER ACTIVE", "Set how many players in the game")]
         [BoxGroup("BOX PLAYER")]
         public int playersActive;
-
-        int P1Pos, P2Pos, P3Pos, P4Pos;
 
         [TitleGroup("BOX PLAYER/SET MODE", "Singleplayer / Multiplayer")]
         [BoxGroup("BOX PLAYER")]
         public bool soloMode;
         #endregion
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        //NEXT
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+        // OTHER SETTINGS
+        #region OTHER SETTINGS
+        [ReadOnly] public List<PlayerController> playersCollection;
+        [ReadOnly] public List<PlayerHud> playersHealth;
+        [ReadOnly] public List<Color> playersColor;
 
-        public List<Transform> whatPlace;
+        [ReadOnly] public List<int> playersStartPosition;
+        [ReadOnly] public List<float> playersRespawnTimer;
+        [ReadOnly] public List<bool> playersDeath;
+        [ReadOnly] public List<float> PlayersRespawnPosition;
+        [ReadOnly] public List<bool> playersAlive;
+        [ReadOnly] public List<int> playersPosition;
 
-        private void Start() 
+        [ReadOnly] public Vector3 respawnPosition;
+        [ReadOnly] public Vector3 deathPosition;
+        [ReadOnly] public Vector3 finishPosition;
+
+        [ReadOnly] public List<Transform> playersFinishPlace;
+        #endregion
+        //-----------------------------------------------------------------------------------------------------------------------------------------
+
+        // Start Player Function
+
+        void AddPlayersToList(PlayerController player, PlayerHud pHealth, Color pColor)
         {
+            // Add players to List
+            playersCollection.Add(player);
+            // Add players Health to List
+            playersHealth.Add(pHealth);
+            // Add players Color to List
+            playersColor.Add(pColor);
+        }
+
+        void SetStartPlayer(PlayerController player, int pPosition, float pMoveSpeed, float pRotateSpeed, float pRotateDelay, bool solo, float pHealth, PlayerHud pHud, Color pColor)
+        {
+            player.transform.position = new Vector3(pPosition, setAllPlayerHeight, player.transform.position.z);
+
+            player.currentHealth = pHealth;
+            player.moveSpeed = pMoveSpeed;
+            player.rotateDuration = pRotateSpeed;
+            player.rotateDelay = pRotateDelay;
+
+            player.singleMovement = solo;
+
+            player.playerColor = pColor;
+            player.playerHud = pHud;
+
+            player.SetStart();
+        }
+
+        void SetPlayers(int playersActive)
+        {
+            // ADD PLAYER TO LIST
+
+            for (int i = 0; i < playersActive; i++)
+            {
+                playersStartPosition.Add(0);
+                playersRespawnTimer.Add(0);
+                playersDeath.Add(false);
+                PlayersRespawnPosition.Add(0);
+                playersAlive.Add(true);
+                playersPosition.Add(0);
+            }
+
+            if (playersActive == 1)
+            {
+                // Add players to List
+                AddPlayersToList(player1, player1Health, player1Color); // Player 1
+
+                // Set Player Position
+                playersStartPosition[0] = only1Player;
+                playersAlive[0] = true;
+
+                // Set Controller
+                playersCollection[0].AssignGamepad(0);
+
+                // Update PlayerControllers' active status based on the active flags
+                playersCollection[0].gameObject.SetActive(playersAlive[0]);
+
+                // Set Player Start
+                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
+
+                // Set Player Spawn Position
+                PlayersRespawnPosition[0] = only1player1RespawnLocation;
+
+                // Set the player Spawn Timer
+                playersRespawnTimer[0] = playerRespawnTimer;
+            }
+            else if (playersActive == 2)
+            {
+                // Add players to List
+                AddPlayersToList(player1, player1Health, player1Color); // Player 1
+                AddPlayersToList(player2, player2Health, player2Color); // Player 2
+
+                // Set Player Position
+                playersStartPosition[0] = only2Player1;
+                playersStartPosition[1] = only2Player2;
+                playersAlive[0] =
+                playersAlive[1] = true;
+
+                // Set Controller
+                playersCollection[0].AssignGamepad(0);
+                playersCollection[1].AssignGamepad(1);
+
+                // Update PlayerControllers' active status based on the active flags
+                playersCollection[0].gameObject.SetActive(playersAlive[0]);
+                playersCollection[1].gameObject.SetActive(playersAlive[1]);
+
+                // Set Player Start
+                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
+                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
+
+                // Set Player Spawn Position
+                PlayersRespawnPosition[0] = only2player1RespawnLocation;
+                PlayersRespawnPosition[1] = only2player2RespawnLocation;
+
+                // Set the player Spawn Timer
+                playersRespawnTimer[0] = playerRespawnTimer;
+                playersRespawnTimer[1] = playerRespawnTimer;
+            }
+            else if (playersActive == 3)
+            {
+                // Add players to List
+                AddPlayersToList(player1, player1Health, player1Color); // Player 1
+                AddPlayersToList(player2, player2Health, player2Color); // Player 2
+                AddPlayersToList(player3, player3Health, player3Color); // Player 3
+
+                // Set Player Position
+                playersStartPosition[0] = only3Player1;
+                playersStartPosition[1] = only3Player2;
+                playersStartPosition[2] = only3Player3;
+                playersAlive[0] =
+                playersAlive[1] =
+                playersAlive[2] = true;
+
+                // Set Controller
+                playersCollection[0].AssignGamepad(0);
+                playersCollection[1].AssignGamepad(1);
+                playersCollection[2].AssignGamepad(2);
+
+                // Update PlayerControllers' active status based on the active flags
+                playersCollection[0].gameObject.SetActive(playersAlive[0]);
+                playersCollection[1].gameObject.SetActive(playersAlive[1]);
+                playersCollection[2].gameObject.SetActive(playersAlive[2]);
+
+                // Set Player Start
+                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
+                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
+                if (playersAlive[2] == true) { SetStartPlayer(playersCollection[2], playersStartPosition[2], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player3Health, player3Color); }
+
+                // Set Player Spawn Position
+                PlayersRespawnPosition[0] = only3player1RespawnLocation;
+                PlayersRespawnPosition[1] = only3player2RespawnLocation;
+                PlayersRespawnPosition[2] = only3player3RespawnLocation;
+
+                // Set the player Spawn Timer
+                playersRespawnTimer[0] = playerRespawnTimer;
+                playersRespawnTimer[1] = playerRespawnTimer;
+                playersRespawnTimer[2] = playerRespawnTimer;
+            }
+            else if (playersActive == 4)
+            {
+                // Add players to List
+                AddPlayersToList(player1, player1Health, player1Color); // Player 1
+                AddPlayersToList(player2, player2Health, player2Color); // Player 2
+                AddPlayersToList(player3, player3Health, player3Color); // Player 3
+                AddPlayersToList(player4, player4Health, player4Color); // Player 4
+
+                // Set Player Position
+                playersStartPosition[0] = only4Player1;
+                playersStartPosition[1] = only4Player2;
+                playersStartPosition[2] = only4Player3;
+                playersStartPosition[3] = only4Player4;
+                playersAlive[0] =
+                playersAlive[1] =
+                playersAlive[2] =
+                playersAlive[3] = true;
+
+                // Set Controller
+                playersCollection[0].AssignGamepad(0);
+                playersCollection[1].AssignGamepad(1);
+                playersCollection[2].AssignGamepad(2);
+                playersCollection[3].AssignGamepad(3);
+
+                // Update PlayerControllers' active status based on the active flags
+                playersCollection[0].gameObject.SetActive(playersAlive[0]);
+                playersCollection[1].gameObject.SetActive(playersAlive[1]);
+                playersCollection[2].gameObject.SetActive(playersAlive[2]);
+                playersCollection[3].gameObject.SetActive(playersAlive[3]);
+
+                // Set Player Start
+                if (playersAlive[0] == true) { SetStartPlayer(playersCollection[0], playersStartPosition[0], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
+                if (playersAlive[1] == true) { SetStartPlayer(playersCollection[1], playersStartPosition[1], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
+                if (playersAlive[2] == true) { SetStartPlayer(playersCollection[2], playersStartPosition[2], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player3Health, player3Color); }
+                if (playersAlive[3] == true) { SetStartPlayer(playersCollection[3], playersStartPosition[3], playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player4Health, player4Color); }
+
+                // Set Player Spawn Position
+                PlayersRespawnPosition[0] = only4player1RespawnLocation;
+                PlayersRespawnPosition[1] = only4player2RespawnLocation;
+                PlayersRespawnPosition[2] = only4player3RespawnLocation;
+                PlayersRespawnPosition[3] = only4player4RespawnLocation;
+
+                // Set the player Spawn Timer
+                playersRespawnTimer[0] = playerRespawnTimer;
+                playersRespawnTimer[1] = playerRespawnTimer;
+                playersRespawnTimer[2] = playerRespawnTimer;
+                playersRespawnTimer[3] = playerRespawnTimer;
+            }
+        }
+
+        // Update Player Function
+
+        void PlayersRespawn(int player)
+        {
+            if (playersRespawnTimer[player] <= 0)
+            {
+                playersCollection[player].transform.position = SnapToGrid(new Vector3(PlayersRespawnPosition[player], respawnPosition.y, playersCollection[player].transform.position.z));
+                playersCollection[player].transform.gameObject.SetActive(true);
+                playersCollection[player].IsCheckTile(SnapToGrid(playersCollection[player].transform.position));
+                playersAlive[player] = true;
+                playersRespawnTimer[player] = playerRespawnTimer;
+                playersDeath[player] = false;
+            }
+        }
+
+        void SetPlayerDeath(PlayerController player)
+        {
+            // Check if the player is now inactive
+            if (!player.transform.gameObject.activeSelf) { return; }
+
+            if (player.transform.position.y > InGameController.Instance.deathPosition.y)
+            {
+                player.transform.gameObject.SetActive(false);
+
+                switch (player.playerId)
+                {
+                    case 0: playersAlive[0] = false; playersDeath[0] = true; break;
+                    case 1: playersAlive[1] = false; playersDeath[1] = true; break;
+                    case 2: playersAlive[2] = false; playersDeath[2] = true; break;
+                    case 3: playersAlive[3] = false; playersDeath[3] = true; break;
+                    // Default case if needed
+                    default: break;
+                }
+            }
+        }
+
+        private void Start()
+        {
+            //-----------------------------------------------------------------------------------------------------------------------------------------
+            // INSTANTIATE LEVEL
+
             // First, ensure currentlevelSandwitch is properly initialized.
             currentlevelSandwitch = new Transform[levelSandwitch.Length];
 
@@ -287,115 +525,27 @@ namespace MoleSurvivor
             }
 
             currentlevelSandwitch[0].gameObject.SetActive(true);
+            //-----------------------------------------------------------------------------------------------------------------------------------------
 
             finishPosition = new Vector3(0, endGoal + playerFinishHeightLocation, inGameCamera.position.z);
             _instaFinishLine = Instantiate(finishLine);
             _instaFinishLine.parent = levelGridParent;
             _instaFinishLine.position = SnapToGrid(new Vector3(0, finishPosition.y, 0));
 
-
-            if (player1 != null && p1Active) { player1.gameObject.SetActive(true); }
-            if (player2 != null && p2Active) { player2.gameObject.SetActive(true); }
-            if (player3 != null && p3Active) { player3.gameObject.SetActive(true); }
-            if (player4 != null && p4Active) { player4.gameObject.SetActive(true); }
-
-            StartCoroutine(CountdownRoutine(countdownStartValue, delayBetweenCountdown)); 
+            StartCoroutine(CountdownRoutine(countdownStartValue, delayBetweenCountdown));
         }
 
         void SetStartAfterCountdown()
         {
-            SetPlayerPositionActivation(playersActive);
-
-            if (player1 != null && p1Active) { SetStartPlayer(player1, P1Pos, playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player1Health, player1Color); }
-            if (player2 != null && p2Active) { SetStartPlayer(player2, P2Pos, playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player2Health, player2Color); }
-            if (player3 != null && p3Active) { SetStartPlayer(player3, P3Pos, playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player3Health, player3Color); }
-            if (player4 != null && p4Active) { SetStartPlayer(player4, P4Pos, playerMoveSpeed, playerRotateSpeed, playerRotateDelay, soloMode, playerHealth, player4Health, player4Color); }
-
-            p1SpawnTimer = playerRespawnTimer;
-            p2SpawnTimer = playerRespawnTimer;
-            p3SpawnTimer = playerRespawnTimer;
-            p4SpawnTimer = playerRespawnTimer;
+            SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
             StartCoroutine(MoveCameraCoroutine());
         }
 
-        public void SetPlayerPositionActivation(int numberOfPlayers)
+        private void Update()
         {
-            // First, deactivate all players
-            p1Active = p2Active = p3Active = p4Active = false;
-
-            // Then, activate players based on the number of players
-            switch (numberOfPlayers)
-            {
-                case 1:
-                    // Set Player Position
-                    P1Pos = only1Player;
-                    // Optionally reset other player values
-                    P2Pos = P3Pos = P4Pos = 0; // Or any default value
-
-                    // Set Player Active
-                    p1Active = true;
-                    player1.AssignGamepad(0);
-                    break;
-                case 2:
-                    // Set Player Position
-                    P1Pos = only2Player1;
-                    P2Pos = only2Player2;
-                    // Optionally reset other player values
-                    P3Pos = P4Pos = 0; // Or any default value
-
-                    // Set Player Active
-                    p1Active = p2Active = true;
-                    player1.AssignGamepad(0);
-                    player2.AssignGamepad(1);
-                    break;
-                case 3:
-                    // Set Player Position
-                    P1Pos = only3Player1;
-                    P2Pos = only3Player2;
-                    P3Pos = only3Player3;
-                    // Optionally reset other player value
-                    P4Pos = 0; // Or any default value
-
-                    // Set Player Active
-                    p1Active = p2Active = p3Active = true;
-                    player1.AssignGamepad(0);
-                    player2.AssignGamepad(1);
-                    player3.AssignGamepad(2);
-                    break;
-                case 4:
-                    // Set Player Position
-                    P1Pos = only4Player1;
-                    P2Pos = only4Player2;
-                    P3Pos = only4Player3;
-                    P4Pos = only4Player4;
-
-                    // Set Player Active
-                    p1Active = p2Active = p3Active = p4Active = true;
-                    player1.AssignGamepad(0);
-                    player2.AssignGamepad(1);
-                    player3.AssignGamepad(2);
-                    player4.AssignGamepad(3);
-                    break;
-                default:
-                    Debug.LogError("Unsupported number of players: " + numberOfPlayers);
-
-                    // Optionally reset all player Position
-                    P1Pos = P2Pos = P3Pos = P4Pos = 0; // Or any default value
-                    break;
-            }
-
-            // Update PlayerControllers' active status based on the active flags
-            player1.gameObject.SetActive(p1Active);
-            player2.gameObject.SetActive(p2Active);
-            player3.gameObject.SetActive(p3Active);
-            player4.gameObject.SetActive(p4Active);
-        }
-
-        private void Update() 
-        {
-            SetUpdate(setActiveUpdate); 
+            SetUpdate(setActiveUpdate);
         }
 
         void SetUpdate(bool active)
@@ -404,11 +554,68 @@ namespace MoleSurvivor
 
             if (active)
             {
-                if (player1 != null && p1Active) { player1.SetUpdate(); SetPlayerDeath(player1); }
-                if (player2 != null && p2Active) { player2.SetUpdate(); SetPlayerDeath(player2); }
-                if (player3 != null && p3Active) { player3.SetUpdate(); SetPlayerDeath(player3); }
-                if (player4 != null && p4Active) { player4.SetUpdate(); SetPlayerDeath(player4); }
-                SetRespawnTimerCountDown();
+                if (playersActive == 1)
+                {
+                    // Set Player Update
+                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
+
+                    // Player Respawn
+                    PlayersRespawn(0);
+
+                    // Update each player's spawn timer if it's above 0
+                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
+                }
+                else if (playersActive == 2)
+                {
+                    // Set Player Update
+                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
+                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
+
+                    // Player Respawn
+                    PlayersRespawn(0);
+                    PlayersRespawn(1);
+
+                    // Update each player's spawn timer if it's above 0
+                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
+                }
+                else if (playersActive == 3)
+                {
+                    // Set Player Update
+                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
+                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
+                    if (playersAlive[2] == true) { playersCollection[2].SetUpdate(); SetPlayerDeath(playersCollection[2]); }
+
+                    // Player Respawn
+                    PlayersRespawn(0);
+                    PlayersRespawn(1);
+                    PlayersRespawn(2);
+
+                    // Update each player's spawn timer if it's above 0
+                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
+                    if (playersDeath[2] == true) { playersRespawnTimer[2] -= Time.deltaTime; PlayersRespawn(2); }
+                }
+                else if (playersActive == 4)
+                {
+                    // Set Player Update
+                    if (playersAlive[0] == true) { playersCollection[0].SetUpdate(); SetPlayerDeath(playersCollection[0]); }
+                    if (playersAlive[1] == true) { playersCollection[1].SetUpdate(); SetPlayerDeath(playersCollection[1]); }
+                    if (playersAlive[2] == true) { playersCollection[2].SetUpdate(); SetPlayerDeath(playersCollection[2]); }
+                    if (playersAlive[3] == true) { playersCollection[3].SetUpdate(); SetPlayerDeath(playersCollection[3]); }
+
+                    // Player Respawn
+                    PlayersRespawn(0);
+                    PlayersRespawn(1);
+                    PlayersRespawn(2);
+                    PlayersRespawn(3);
+
+                    // Update each player's spawn timer if it's above 0
+                    if (playersDeath[0] == true) { playersRespawnTimer[0] -= Time.deltaTime; PlayersRespawn(0); }
+                    if (playersDeath[1] == true) { playersRespawnTimer[1] -= Time.deltaTime; PlayersRespawn(1); }
+                    if (playersDeath[2] == true) { playersRespawnTimer[2] -= Time.deltaTime; PlayersRespawn(2); }
+                    if (playersDeath[3] == true) { playersRespawnTimer[3] -= Time.deltaTime; PlayersRespawn(3); }
+                }
 
                 // Set the Level to false
                 for (int i = 0; i < currentlevelSandwitch.Length; i++)
@@ -432,117 +639,6 @@ namespace MoleSurvivor
 
             // Ensure the camera reaches exactly the target position
             inGameCamera.transform.position = new Vector3(0, endGoal, startingPosition.z);
-        }
-
-        void SetStartPlayer
-        (PlayerController player, int pPosition, float pMoveSpeed, float pRotateSpeed, float pRotateDelay, bool solo, float pHealth, PlayerHud pHud, Color pColor)
-        {
-            player.transform.position = new Vector3(pPosition, setAllPlayerHeight, player.transform.position.z);
-
-            player.currentHealth = pHealth;
-            player.moveSpeed = pMoveSpeed;
-            player.rotateDuration = pRotateSpeed;
-            player.rotateDelay = pRotateDelay;
-
-            player.singleMovement = solo;
-
-            player.playerColor = pColor;
-            player.playerHud = pHud;
-
-            player.SetStart();
-        }
-
-        void SetPlayerDeath(PlayerController player)
-        {
-            // Check if the player is now inactive
-            if (!player.transform.gameObject.activeSelf) { return; }
-
-            if (player.transform.position.y > InGameController.Instance.deathPosition.y)
-            {
-                player.transform.gameObject.SetActive(false);
-
-                switch (player.playerId)
-                {
-                    case 0: p1Active = false; p1Death = true; break;
-                    case 1: p2Active = false; p2Death = true; break;
-                    case 2: p3Active = false; p3Death = true; break;
-                    case 3: p4Active = false; p4Death = true; break;
-                    // Default case if needed
-                    default: break;
-                }
-            }
-        }
-
-        void SetRespawnTimerCountDown()
-        {
-            // Update each player's spawn timer if it's above 0
-            if (p1Death == true) { p1SpawnTimer -= Time.deltaTime; SetSpawnPosition(); }
-            if (p2Death == true) { p2SpawnTimer -= Time.deltaTime; SetSpawnPosition(); }
-            if (p3Death == true) { p3SpawnTimer -= Time.deltaTime; SetSpawnPosition(); }
-            if (p4Death == true) { p4SpawnTimer -= Time.deltaTime; SetSpawnPosition(); }
-        }
-
-        float p1SpawnPos, p2SpawnPos, p3SpawnPos, p4SpawnPos;
-
-        void SetSpawnPosition()
-        {
-            // Then, activate players based on the number of players
-            switch (playersActive)
-            {
-                case 1:
-                    // Set Player Position
-                    p1SpawnPos = only1player1RespawnLocation;
-                    break;
-                case 2:
-                    // Set Player Position
-                    p1SpawnPos = only2player1RespawnLocation;
-                    p2SpawnPos = only2player2RespawnLocation;
-                    break;
-                case 3:
-                    // Set Player Position
-                    p1SpawnPos = only3player1RespawnLocation;
-                    p2SpawnPos = only3player2RespawnLocation;
-                    p3SpawnPos = only3player3RespawnLocation;
-                    break;
-                case 4:
-                    // Set Player Position
-                    p1SpawnPos = only4player1RespawnLocation;
-                    p2SpawnPos = only4player2RespawnLocation;
-                    p3SpawnPos = only4player3RespawnLocation;
-                    p4SpawnPos = only4player4RespawnLocation;
-                    break;
-                default:
-                    break;
-            }
-
-            if (p1SpawnTimer <= 0) {
-                player1.transform.position = SnapToGrid(new Vector3(p1SpawnPos, respawnPosition.y, player1.transform.position.z));
-                player1.transform.gameObject.SetActive(true);
-                player1.IsCheckTile(SnapToGrid(player1.transform.position));
-                p1Active = true;
-                p1SpawnTimer = playerRespawnTimer;
-                p1Death = false; }
-            if (p2SpawnTimer <= 0) {
-                player2.transform.position = SnapToGrid(new Vector3(p2SpawnPos, respawnPosition.y, player2.transform.position.z));
-                player2.transform.gameObject.SetActive(true);
-                player2.IsCheckTile(SnapToGrid(player2.transform.position));
-                p2Active = true;
-                p2SpawnTimer = playerRespawnTimer;
-                p2Death = false; }
-            if (p3SpawnTimer <= 0) {
-                player3.transform.position = SnapToGrid(new Vector3(p3SpawnPos, respawnPosition.y, player3.transform.position.z));
-                player3.transform.gameObject.SetActive(true);
-                player3.IsCheckTile(SnapToGrid(player3.transform.position));
-                p3Active = true;
-                p3SpawnTimer = playerRespawnTimer;
-                p3Death = false; }
-            if (p4SpawnTimer <= 0) {
-                player4.transform.position = SnapToGrid(new Vector3(p4SpawnPos, respawnPosition.y, player4.transform.position.z));
-                player4.transform.gameObject.SetActive(true);
-                player4.IsCheckTile(SnapToGrid(player4.transform.position));
-                p4Active = true;
-                p4SpawnTimer = playerRespawnTimer;
-                p4Death = false; }
         }
 
         IEnumerator CountdownRoutine(int startValue, float delay)
@@ -575,11 +671,6 @@ namespace MoleSurvivor
                 SetStartAfterCountdown();
                 setActiveUpdate = true;
             });
-        }
-
-        public void SetDestroy()
-        {
-            Destroy(this.gameObject);
         }
 
         public void OutsideBound(Transform objectBound, float objectBoundPositionOffset)
@@ -623,9 +714,10 @@ namespace MoleSurvivor
             return player;
         }
 
-        [HideInInspector] public Vector3 respawnPosition;
-        [HideInInspector] public Vector3 deathPosition;
-        [HideInInspector] public Vector3 finishPosition;
+        public void SetDestroy()
+        {
+            Destroy(this.gameObject);
+        }
 
         private void OnDrawGizmos()
         {
@@ -664,7 +756,7 @@ namespace MoleSurvivor
             Gizmos.DrawLine(outerBottomRight, outerTopRight);
 
             //---------------------------------------------------------------------------------------
-            
+
             Gizmos.color = Color.red;
 
             respawnPosition = new Vector3(0, inGameCamera.position.y + playerRespawnHeightLocation, inGameCamera.position.z);
@@ -714,7 +806,7 @@ namespace MoleSurvivor
 
             Gizmos.color = Color.blue;
 
-            Vector3 boundSidePositionLeft = new Vector3(-playerBoundLocation, inGameCamera.position.y , inGameCamera.position.z);
+            Vector3 boundSidePositionLeft = new Vector3(-playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionLeft + new Vector3(0, -vertical), boundSidePositionLeft + new Vector3(0, vertical));
 
             Vector3 boundSidePositionRight = new Vector3(playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);

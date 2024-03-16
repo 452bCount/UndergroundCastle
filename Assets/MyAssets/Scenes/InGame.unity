@@ -6120,16 +6120,21 @@ MonoBehaviour:
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
   playerHealth: 10
-  p1Active: 0
-  p2Active: 0
-  p3Active: 0
-  p4Active: 0
   playersActive: 2
   soloMode: 1
-  whatPlace: []
+  playersCollection: []
+  playersHealth: []
+  playersColor: []
+  playersStartPosition: 
+  playersRespawnTimer: []
+  playersDeath: 
+  PlayersRespawnPosition: []
+  playersAlive: 
+  playersPosition: 
   respawnPosition: {x: 0, y: 10.16, z: -17}
   deathPosition: {x: 0, y: 26.7, z: -17}
-  finishPosition: {x: 0, y: 0.45, z: -17}
+  finishPosition: {x: 0, y: 0, z: 0}
+  playersFinishPlace: []
 --- !u!4 &1237608681
 Transform:
   m_ObjectHideFlags: 0
