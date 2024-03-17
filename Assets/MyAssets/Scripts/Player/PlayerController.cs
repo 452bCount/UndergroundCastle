@@ -30,10 +30,12 @@ namespace MoleSurvivor
 
         [ReadOnly] public Color playerColor;
         [ReadOnly] public PlayerHud playerHud;
-        private CharacterMovement characterMovement;
+        [HideInInspector] public CharacterMovement characterMovement;
         [ReadOnly] public bool isAllowedToMove = true;
 
         [HideInInspector] public float horizontalInput;
+        public float prevHorizontalInput;
+        [HideInInspector] public bool finishLine;
 
         #region
 
@@ -61,13 +63,14 @@ namespace MoleSurvivor
 
         void CheckForInput()
         {
-            horizontalInput = player.GetAxis("LJ Horizontal");
+            horizontalInput = (finishLine == true) ? horizontalInput : player.GetAxis("LJ Horizontal");
 
             // Directly use horizontalInput for movement
             if (horizontalInput != 0)
             {
-                if (horizontalInput > 0) { horizontalInput = 1; } else if (horizontalInput < 0) { horizontalInput = -1; }
-                int direction = (int)horizontalInput; // -1 for left, 1 for right
+                // Update the lastDirection based on horizontalInput if it's not 0
+                if (horizontalInput > 0) { horizontalInput = prevHorizontalInput = 1; } else if (horizontalInput < 0) { horizontalInput = prevHorizontalInput = -1; }
+                int direction = (singleMovement == true) ? (int)horizontalInput : (int)prevHorizontalInput; // -1 for left, 1 for right
                 _inputM = new Vector2(direction * 1, -1);
                 _inputR = direction * -90;
             }
@@ -76,7 +79,7 @@ namespace MoleSurvivor
         public void SetUpdate()
         {
             // Single Movement or Continous Movement
-            _inputM = (singleMovement) ? Vector2.zero : _inputM;
+            _inputM = (singleMovement == true) ? Vector2.zero : _inputM;
 
             CheckForInput();
 

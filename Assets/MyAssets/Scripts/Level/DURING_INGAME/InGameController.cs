@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using TMPro;
 using DG.Tweening;
 using Sirenix.OdinInspector;
@@ -282,6 +283,7 @@ namespace MoleSurvivor
         [ReadOnly] public Vector3 finishPosition;
 
         [ReadOnly] public List<Transform> playersFinishPlace;
+        [ReadOnly] public bool allPlayerFinishLevel;
         #endregion
         //-----------------------------------------------------------------------------------------------------------------------------------------
         //NEXT
@@ -362,6 +364,17 @@ namespace MoleSurvivor
         #endregion
         // UPDATE PLATER FUNCTION
         #region UPDATE PLATER FUNCTION
+
+        void PUpdates(int pNumber)
+        {
+            // Set Player Update
+            if (playerEach[pNumber].playerAlive == true) { playerEach[pNumber].playerController.SetUpdate(); SetPlayerDeath(playerEach[pNumber].playerController); }
+            // Player Respawn
+            PlayersRespawn(pNumber);
+            // Update each player's spawn timer if it's above 0
+            if (playerEach[pNumber].playerDeath == true) { playerEach[pNumber].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(pNumber); }
+        }
+
         void PlayersRespawn(int player)
         {
             if (playerEach[player].playerRespawnTimer <= 0)
@@ -435,11 +448,16 @@ namespace MoleSurvivor
 
         void SetStartAfterCountdown()
         {
+            //-----------------------------------------------------------------------------------------------------------------------------------------
+            // START AFTER COUNTDOWN
+            #region START AFTER COUNTDOWN
             // Set how many players are active
             SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
             StartCoroutine(MoveCameraCoroutine());
+            #endregion
+            //-----------------------------------------------------------------------------------------------------------------------------------------
         }
 
         private void Update()
@@ -455,65 +473,50 @@ namespace MoleSurvivor
             {
                 if (playersActive == 1)
                 {
-                    // Set Player Update
-                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
-                    // Player Respawn
-                    PlayersRespawn(0);
-                    // Update each player's spawn timer if it's above 0
-                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
+                    PUpdates(0);
                 }
                 else if (playersActive == 2)
                 {
-                    // Set Player Update
-                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
-                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
-                    // Player Respawn
-                    PlayersRespawn(0);
-                    PlayersRespawn(1);
-                    // Update each player's spawn timer if it's above 0
-                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
+                    PUpdates(0);
+                    PUpdates(1);
                 }
                 else if (playersActive == 3)
                 {
-                    // Set Player Update
-                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
-                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
-                    if (playerEach[2].playerAlive == true) { playerEach[2].playerController.SetUpdate(); SetPlayerDeath(playerEach[2].playerController); }
-                    // Player Respawn
-                    PlayersRespawn(0);
-                    PlayersRespawn(1);
-                    PlayersRespawn(2);
-                    // Update each player's spawn timer if it's above 0
-                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
-                    if (playerEach[2].playerDeath == true) { playerEach[2].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(2); }
+                    PUpdates(0);
+                    PUpdates(1);
+                    PUpdates(2);
                 }
                 else if (playersActive == 4)
                 {
-                    // Set Player Update
-                    if (playerEach[0].playerAlive == true) { playerEach[0].playerController.SetUpdate(); SetPlayerDeath(playerEach[0].playerController); }
-                    if (playerEach[1].playerAlive == true) { playerEach[1].playerController.SetUpdate(); SetPlayerDeath(playerEach[1].playerController); }
-                    if (playerEach[2].playerAlive == true) { playerEach[2].playerController.SetUpdate(); SetPlayerDeath(playerEach[2].playerController); }
-                    if (playerEach[3].playerAlive == true) { playerEach[3].playerController.SetUpdate(); SetPlayerDeath(playerEach[3].playerController); }
-                    // Player Respawn
-                    PlayersRespawn(0);
-                    PlayersRespawn(1);
-                    PlayersRespawn(2);
-                    PlayersRespawn(3);
-                    // Update each player's spawn timer if it's above 0
-                    if (playerEach[0].playerDeath == true) { playerEach[0].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(0); }
-                    if (playerEach[1].playerDeath == true) { playerEach[1].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(1); }
-                    if (playerEach[2].playerDeath == true) { playerEach[2].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(2); }
-                    if (playerEach[3].playerDeath == true) { playerEach[3].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(3); }
+                    PUpdates(0);
+                    PUpdates(1);
+                    PUpdates(2);
+                    PUpdates(3);
                 }
 
                 // Set the Level to false
                 for (int i = 0; i < currentlevelSandwitch.Length; i++)
                 {
-                    OutsideBound(currentlevelSandwitch[i], eachLayerSize / 2);
+                    OutsideBound(currentlevelSandwitch[i], eachLayerSize / 2, true);
+                }
+
+                if (playersFinishPlace.Count >= playersActive)
+                {
+                    allPlayerFinishLevel = true;
+
+                    foreach (var pEach in playerEach)
+                    {
+                        OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach));
+                    }
                 }
             }
+        }
+
+        void SetPlayerAfterFinish(PlayerCustom pEach)
+        {
+            pEach.playerController.isAllowedToMove = false;
+            if (pEach.playerController.characterMovement.ReturnCheckIsMoving() == false) 
+            { pEach.playerAlive = false; pEach.playerController.transform.gameObject.SetActive(false); }
         }
 
         IEnumerator MoveCameraCoroutine()
@@ -564,7 +567,7 @@ namespace MoleSurvivor
             });
         }
 
-        public void OutsideBound(Transform objectBound, float objectBoundPositionOffset)
+        public void OutsideBound(Transform objectBound, float objectBoundPositionOffset, bool SideY, Action applyAction = null)
         {
             // Assuming inGameCamera, horizontal, vertical, and _screenSpace are already defined
 
@@ -586,15 +589,20 @@ namespace MoleSurvivor
             Vector3 pointToCheckTop = objectBound.position + new Vector3(0, -objectBoundPositionOffset, 0); // Example point
             Vector3 pointToCheckDown = objectBound.position + new Vector3(0, objectBoundPositionOffset, 0); // Example point
 
-            if (pointToCheckTop.y > outerTop)
+            if (pointToCheckTop.y > outerTop && SideY == true)
             {
                 // The point the outer boundaries
                 objectBound.gameObject.SetActive(false);
             }
-            if (pointToCheckDown.y > outerBottom && pointToCheckTop.y < outerTop)
+            if (pointToCheckDown.y > outerBottom && pointToCheckTop.y < outerTop && SideY == true)
             {
                 // The point the outer boundaries
                 objectBound.gameObject.SetActive(true);
+            }
+
+            if (objectBound.position.x < outerLeft && SideY == false || objectBound.position.x > outerRight && SideY == false)
+            {
+                applyAction?.Invoke();
             }
         }
 
