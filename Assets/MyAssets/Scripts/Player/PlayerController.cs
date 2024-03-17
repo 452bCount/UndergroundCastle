@@ -34,7 +34,7 @@ namespace MoleSurvivor
         [ReadOnly] public bool isAllowedToMove = true;
 
         [HideInInspector] public float horizontalInput;
-        public float prevHorizontalInput;
+        [HideInInspector] public float prevHorizontalInput;
         [HideInInspector] public bool finishLine;
 
         #region
@@ -71,6 +71,13 @@ namespace MoleSurvivor
                 // Update the lastDirection based on horizontalInput if it's not 0
                 if (horizontalInput > 0) { horizontalInput = prevHorizontalInput = 1; } else if (horizontalInput < 0) { horizontalInput = prevHorizontalInput = -1; }
                 int direction = (singleMovement == true) ? (int)horizontalInput : (int)prevHorizontalInput; // -1 for left, 1 for right
+                _inputM = new Vector2(direction * 1, -1);
+                _inputR = direction * -90;
+            }
+            else if (horizontalInput == 0 && finishLine == true)
+            {
+                singleMovement = false;
+                int direction = (int)prevHorizontalInput; // -1 for left, 1 for right
                 _inputM = new Vector2(direction * 1, -1);
                 _inputR = direction * -90;
             }

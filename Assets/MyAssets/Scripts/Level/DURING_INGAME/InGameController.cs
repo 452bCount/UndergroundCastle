@@ -506,7 +506,8 @@ namespace MoleSurvivor
 
                     foreach (var pEach in playerEach)
                     {
-                        OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach));
+                        if (pEach.playerController.transform.position.y < _instaFinishLine.position.y)
+                        { OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach)); }
                     }
                 }
             }
@@ -516,7 +517,7 @@ namespace MoleSurvivor
         {
             pEach.playerController.isAllowedToMove = false;
             if (pEach.playerController.characterMovement.ReturnCheckIsMoving() == false) 
-            { pEach.playerAlive = false; pEach.playerController.transform.gameObject.SetActive(false); }
+            { pEach.playerAlive = false; pEach.playerController.transform.gameObject.SetActive(false); pEach.playerController.transform.position = Vector3.zero; }
         }
 
         IEnumerator MoveCameraCoroutine()
