@@ -11,6 +11,7 @@ namespace MoleSurvivor
         public int currentInt;
         private Transform player;
         private bool canGoOpposite = true;
+        bool inUseSinglePLayer;
 
         private bool cBeforeOrAfter;
 
@@ -19,7 +20,20 @@ namespace MoleSurvivor
             IsCheckTile(transform.position);
         }
 
-        protected override void StartCall(Transform cPlayer) { if (checkBeforeOrAfter == true) { currentInt = Random.Range(min, max + 1); player = cPlayer; StartCoroutine(CorUpdate()); } }
+        protected override void StartCall(Transform cPlayer) 
+        {
+            if (inUseSinglePLayer == true)
+            {
+                return;
+            }
+
+            if (checkBeforeOrAfter == true) 
+            { 
+                currentInt = Random.Range(min, max + 1); 
+                player = cPlayer; StartCoroutine(CorUpdate());
+                inUseSinglePLayer = true;
+            } 
+        }
 
         public IEnumerator CorUpdate()
         {

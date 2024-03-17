@@ -88,6 +88,8 @@ namespace MoleSurvivor
         [TitleGroup("BOX CAMERA HOLDER/CAMERA & GRID")]
         public Transform inGameCamera;
         [BoxGroup("BOX CAMERA HOLDER")]
+        public InGameCanvas inGameCanvas;
+        [BoxGroup("BOX CAMERA HOLDER")]
         public Grid grid; // Reference to the isometric grid
         [BoxGroup("BOX CAMERA HOLDER")]
         public Transform finishLine;
@@ -251,6 +253,10 @@ namespace MoleSurvivor
         [TitleGroup("BOX PLAYER/PLAYER FINISH LINE")]
         public float playerFinishHeightLocation;
 
+        [BoxGroup("BOX PLAYER")]
+        [TitleGroup("BOX PLAYER/PLAYER HEALTH LINE")]
+        public float playerHealthHeightLocation;
+
         [TitleGroup("BOX PLAYER/START SPEED & ROTATION", "Set all the players the Speed and Rotation on the start")]
         [BoxGroup("BOX PLAYER", false)]
         public float
@@ -276,12 +282,12 @@ namespace MoleSurvivor
         //-----------------------------------------------------------------------------------------------------------------------------------------
         // OTHER SETTINGS
         #region OTHER SETTINGS
+        [ReadOnly] public List<float> inGameCameraColumns = new List<float>();
+
         [ReadOnly] public List<PlayerCustom> playerEach;
-
-        [ReadOnly] public Vector3 respawnPosition;
-        [ReadOnly] public Vector3 deathPosition;
-        [ReadOnly] public Vector3 finishPosition;
-
+        [HideInInspector] public Vector3 respawnPosition;
+        [HideInInspector] public Vector3 deathPosition;
+        [HideInInspector] public Vector3 finishPosition;
         [ReadOnly] public List<Transform> playersFinishPlace;
         [ReadOnly] public bool allPlayerFinishLevel;
         #endregion
@@ -290,11 +296,14 @@ namespace MoleSurvivor
         //-----------------------------------------------------------------------------------------------------------------------------------------
         // START PLAYER FUNCTION
         #region START PLAYER FUNCTION
-        void SetStartPlayerCustom(PlayerCustom playerCustom, PlayerController player, PlayerHud pHealth, Color pColor, int pStartPosition, float pRespawnPosition, int pGamepad)
+        void SetStartPlayerCustom(PlayerCustom playerCustom, PlayerController player, PlayerHud pHealth, Color pColor, int pStartPosition, float pRespawnPosition, int pGamepad, float assignHudPosition)
         {
             playerCustom.playerController = player;
             playerCustom.playerHealth = pHealth;
             playerCustom.playerColor = pColor;
+
+            playerCustom.playerHealth.transform.localPosition = 
+            new Vector3(assignHudPosition, playerHealthHeightLocation, playerCustom.playerHealth.transform.localPosition.z);
 
             // Set Player Position
             playerCustom.playerStartPosition = pStartPosition;
@@ -340,25 +349,25 @@ namespace MoleSurvivor
 
             if (playersActive == 1)
             {
-                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only1Player, only1player1RespawnLocation, 0);
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only1Player, only1player1RespawnLocation, 0, inGameCameraColumns[0]);
             }
             else if (playersActive == 2)
             {
-                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only2Player1, only2player1RespawnLocation, 0);
-                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only2Player2, only2player2RespawnLocation, 1);
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only2Player1, only2player1RespawnLocation, 0, inGameCameraColumns[0]);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only2Player2, only2player2RespawnLocation, 1, inGameCameraColumns[1]);
             }
             else if (playersActive == 3)
             {
-                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only3Player1, only3player1RespawnLocation, 0);
-                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only3Player2, only3player2RespawnLocation, 1);
-                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only3Player3, only3player3RespawnLocation, 2);
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only3Player1, only3player1RespawnLocation, 0, inGameCameraColumns[0]);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only3Player2, only3player2RespawnLocation, 1, inGameCameraColumns[1]);
+                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only3Player3, only3player3RespawnLocation, 2, inGameCameraColumns[2]);
             }
             else if (playersActive == 4)
             {
-                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only4Player1, only4player1RespawnLocation, 0);
-                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only4Player2, only4player2RespawnLocation, 1);
-                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only4Player3, only4player3RespawnLocation, 2);
-                SetStartPlayerCustom(playerEach[3], player4, player4Health, player4Color, only4Player4, only4player4RespawnLocation, 3);
+                SetStartPlayerCustom(playerEach[0], player1, player1Health, player1Color, only4Player1, only4player1RespawnLocation, 0, inGameCameraColumns[0]);
+                SetStartPlayerCustom(playerEach[1], player2, player2Health, player2Color, only4Player2, only4player2RespawnLocation, 1, inGameCameraColumns[1]);
+                SetStartPlayerCustom(playerEach[2], player3, player3Health, player3Color, only4Player3, only4player3RespawnLocation, 2, inGameCameraColumns[2]);
+                SetStartPlayerCustom(playerEach[3], player4, player4Health, player4Color, only4Player4, only4player4RespawnLocation, 3, inGameCameraColumns[3]);
             }
         }
         #endregion
@@ -438,6 +447,19 @@ namespace MoleSurvivor
             _instaFinishLine = Instantiate(finishLine);
             _instaFinishLine.parent = levelGridParent;
             _instaFinishLine.position = SnapToGrid(new Vector3(0, finishPosition.y, 0));
+            #endregion
+            // SET PLAYERHUB POSITION
+            #region I WILL UPDATE THIS LATER
+            RectTransform canvasRectTransform = inGameCanvas.GetComponent<RectTransform>();
+            float canvasWidth = canvasRectTransform.rect.width;
+            float columnWidth = canvasWidth / (playersActive + 1);
+
+            // Calculate the positions of the dividing lines
+            for (int i = 1; i < (playersActive + 1); i++) // Start at 1 to skip the far left edge of the canvas
+            {
+                float linePosition = (i * columnWidth) - (canvasWidth / 2); // Subtract half canvas width to center
+                inGameCameraColumns.Add(linePosition);
+            }
             #endregion
             // START COUNTDOWN
             #region START COUNTDOWN
@@ -711,6 +733,8 @@ namespace MoleSurvivor
 
             Vector3 boundSidePositionRight = new Vector3(playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
+
+            //---------------------------------------------------------------------------------------
         }
 
     }

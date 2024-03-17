@@ -1235,6 +1235,7 @@ GameObject:
   - component: {fileID: 370599141}
   - component: {fileID: 370599140}
   - component: {fileID: 370599139}
+  - component: {fileID: 370599143}
   m_Layer: 5
   m_Name: InGame Canvas
   m_TagString: Untagged
@@ -1325,6 +1326,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &370599143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370599138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7047832e87db76c45b95cc45c386b227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &412716686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5972,75 +5985,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1215664687}
   m_CullTransparentMesh: 1
---- !u!1001 &1220995660
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3638420152202126504, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: _BaseSet
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3638420152202126504, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: _CostumeSet
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3638420152202126504, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: _PreviewModel
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6200877787316142137, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_Name
-      value: MainBodyPlayer
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6721096683652291203, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b8eeaed2609ad434abd778a05791bb8d, type: 3}
 --- !u!1 &1237608679
 GameObject:
   m_ObjectHideFlags: 0
@@ -6081,6 +6025,7 @@ MonoBehaviour:
   - {fileID: 1961008153974976428, guid: fe21afb951e02984d847344e735a6646, type: 3}
   - {fileID: 2111411902504925195, guid: 1383e3cbe202ace4eac3324a95518f28, type: 3}
   inGameCamera: {fileID: 727346680}
+  inGameCanvas: {fileID: 370599143}
   grid: {fileID: 537450218453900091}
   finishLine: {fileID: 4645384226989722796, guid: 42f2e3c6cd8202c468f38289c44f19ed, type: 3}
   _screenSpace: {x: 5.35, y: 4}
@@ -6096,8 +6041,8 @@ MonoBehaviour:
   player4Health: {fileID: 2035348243}
   player1Color: {r: 1, g: 0, b: 0, a: 1}
   player2Color: {r: 0, g: 0.14160705, b: 0.9811321, a: 1}
-  player3Color: {r: 1, g: 0.9708301, b: 0, a: 1}
-  player4Color: {r: 0.04150939, g: 1, b: 0.21542375, a: 1}
+  player3Color: {r: 1, g: 0.8260877, b: 0, a: 1}
+  player4Color: {r: 0, g: 0.6320754, b: 0.11398083, a: 1}
   setAllPlayerHeight: 8
   only1Player: 0
   only2Player1: -6
@@ -6128,12 +6073,14 @@ MonoBehaviour:
   playerDeathHeightLocation: 21.7
   playerBoundLocation: 12.16
   playerFinishHeightLocation: -5.96
+  playerHealthHeightLocation: -414
   playerMoveSpeed: 10
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
   playerHealth: 10
-  playersActive: 1
-  soloMode: 0
+  playersActive: 4
+  soloMode: 1
+  inGameCameraColumns: []
   playerEach: []
   respawnPosition: {x: 0, y: 10.16, z: -17}
   deathPosition: {x: 0, y: 26.7, z: -17}
