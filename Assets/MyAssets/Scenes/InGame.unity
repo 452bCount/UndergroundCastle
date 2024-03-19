@@ -510,6 +510,7 @@ MonoBehaviour:
   horizontalInput: 0
   prevHorizontalInput: 0
   finishLine: 0
+  boundarySide: 0
 --- !u!4 &120083448
 Transform:
   m_ObjectHideFlags: 0
@@ -816,6 +817,7 @@ MonoBehaviour:
   horizontalInput: 0
   prevHorizontalInput: 0
   finishLine: 0
+  boundarySide: 0
 --- !u!4 &205914720
 Transform:
   m_ObjectHideFlags: 0
@@ -3124,6 +3126,7 @@ MonoBehaviour:
   horizontalInput: 0
   prevHorizontalInput: 0
   finishLine: 0
+  boundarySide: 0
 --- !u!4 &682836402
 Transform:
   m_ObjectHideFlags: 0
@@ -4719,6 +4722,7 @@ MonoBehaviour:
   horizontalInput: 0
   prevHorizontalInput: 0
   finishLine: 0
+  boundarySide: 0
 --- !u!4 &945404786
 Transform:
   m_ObjectHideFlags: 0

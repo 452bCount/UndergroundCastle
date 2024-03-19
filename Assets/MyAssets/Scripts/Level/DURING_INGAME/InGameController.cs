@@ -325,6 +325,8 @@ namespace MoleSurvivor
 
                 playerCustom.playerController.singleMovement = soloMode;
 
+                playerCustom.playerController.boundarySide = playerBoundLocation;
+
                 playerCustom.playerController.playerColor = pColor;
                 playerCustom.playerController.playerHud = playerCustom.playerHealth;
 
@@ -735,6 +737,7 @@ namespace MoleSurvivor
             Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
 
             //---------------------------------------------------------------------------------------
+
         }
 
     }
