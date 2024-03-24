@@ -6050,13 +6050,13 @@ MonoBehaviour:
   player3Color: {r: 1, g: 0.8260877, b: 0, a: 1}
   player4Color: {r: 0, g: 0.6320754, b: 0.11398083, a: 1}
   pColorCollection: []
-  setAllPlayerHeight: 8
+  playersStartPosition: 4.39
   playerRespawnTimer: 0.5
-  playerRespawnHeightLocation: 4.76
-  playerDeathHeightLocation: 8.67
-  playerBoundLocation: 14.89
-  playerFinishHeightLocation: -5.7
-  playerHealthHeightLocation: -414
+  playersRespawnPosition: 1.85
+  playersDeathPosition: 7.9
+  playersBoundPosition: 14.07
+  playersFinishPosition: -6.29
+  playerHealthHeightLocation: -416.17
   playerMoveSpeed: 10
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
@@ -6065,8 +6065,9 @@ MonoBehaviour:
   soloMode: 1
   inGameCameraColumns: []
   playerEach: []
-  respawnPosition: {x: 0, y: 9.76, z: -17}
-  deathPosition: {x: 0, y: 13.67, z: -17}
+  startPosition: {x: 0, y: 8, z: -17}
+  respawnPosition: {x: 0, y: 6, z: -17}
+  deathPosition: {x: 0, y: 12.9, z: -17}
   finishPosition: {x: 0, y: 0, z: 0}
   playersFinishPlace: []
   allPlayerFinishLevel: 0

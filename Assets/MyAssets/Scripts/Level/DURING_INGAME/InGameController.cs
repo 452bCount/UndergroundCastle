@@ -15,9 +15,7 @@ namespace MoleSurvivor
         public PlayerHud playerHealth;
         public Color playerColor;
 
-        public int playerStartPosition;
         public float playerRespawnTimer;
-        public float PlayerRespawnPosition;
         public bool playerDeath;
         public bool playerAlive;
     }
@@ -121,8 +119,8 @@ namespace MoleSurvivor
 
         //---------------------------------------------------------------------------------------------------------------------------------------
 
-        [BoxGroup("BOX PLAYER")] [TitleGroup("BOX PLAYER/PLAYER START LINE")] 
-        [SerializeField] public int setAllPlayerHeight;
+        [BoxGroup("BOX PLAYER")] [TitleGroup("BOX PLAYER/PLAYER START LINE")]  [LabelText("Start Line")]
+        [SerializeField] public float playersStartPosition;
 
         //---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,22 +129,22 @@ namespace MoleSurvivor
         [SerializeField] public float playerRespawnTimer;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Respawn Line")]
-        [SerializeField] public float playerRespawnHeightLocation;
+        [SerializeField] public float playersRespawnPosition;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Death Line")]
-        [TitleGroup("BOX PLAYER/PLAYER DEATH LINE")]
-        public float playerDeathHeightLocation;
+        [TitleGroup("BOX PLAYER/PLAYER DEATH LINE", "Set all the players death position")]
+        public float playersDeathPosition;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Bound Line")]
         [TitleGroup("BOX PLAYER/PLAYER BOUND LINE")]
-        public float playerBoundLocation;
+        public float playersBoundPosition;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Finish Line")]
-        [TitleGroup("BOX PLAYER/PLAYER FINISH LINE")]
-        public float playerFinishHeightLocation;
+        [TitleGroup("BOX PLAYER/PLAYER FINISH LINE", "Set finish position")]
+        public float playersFinishPosition;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Health Height")]
-        [TitleGroup("BOX PLAYER/PLAYER HEALTH LINE")]
+        [TitleGroup("BOX PLAYER/PLAYER HEALTH LINE", "Set all the players Health UI position to the Canvas")]
         public float playerHealthHeightLocation;
 
         [TitleGroup("BOX PLAYER/START SPEED & ROTATION", "Set all the players the Speed and Rotation on the start")]
@@ -173,6 +171,7 @@ namespace MoleSurvivor
         [ReadOnly] public List<float> inGameCameraColumns = new List<float>();
 
         [ReadOnly] public List<PlayerCustom> playerEach;
+        [HideInInspector] public Vector3 startPosition;
         [HideInInspector] public Vector3 respawnPosition;
         [HideInInspector] public Vector3 deathPosition;
         [HideInInspector] public Vector3 finishPosition;
@@ -194,7 +193,7 @@ namespace MoleSurvivor
             new Vector3(assignHudPosition, playerHealthHeightLocation, playerCustom.playerHealth.transform.localPosition.z);
 
             // Set Player Position
-            playerCustom.playerStartPosition = Mathf.FloorToInt(gridPos);
+            float pStartPosition = gridPos;
             // Set Player is ALive
             playerCustom.playerAlive = true;
             // Set Controller
@@ -204,7 +203,7 @@ namespace MoleSurvivor
             // Set Player Start
             if (playerCustom.playerAlive == true) 
             {
-                playerCustom.playerController.transform.position = new Vector3(playerCustom.playerStartPosition, setAllPlayerHeight, player.transform.position.z);
+                playerCustom.playerController.transform.position = new Vector3(pStartPosition, startPosition.y, playerCustom.playerController.transform.position.z);
 
                 playerCustom.playerController.currentHealth = playerHealth;
                 playerCustom.playerController.moveSpeed = playerMoveSpeed;
@@ -213,7 +212,7 @@ namespace MoleSurvivor
 
                 playerCustom.playerController.singleMovement = soloMode;
 
-                playerCustom.playerController.boundarySide = playerBoundLocation;
+                playerCustom.playerController.boundarySide = playersBoundPosition;
 
                 playerCustom.playerController.playerColor = pColor;
                 playerCustom.playerController.playerHud = playerCustom.playerHealth;
@@ -222,8 +221,6 @@ namespace MoleSurvivor
             }
             // Set Player is Dead
             playerCustom.playerDeath = false;
-            // Set Player Spawn Position
-            playerCustom.PlayerRespawnPosition = gridPos;
             // Set the player Spawn Timer
             playerCustom.playerRespawnTimer = playerRespawnTimer;
         }
@@ -270,9 +267,9 @@ namespace MoleSurvivor
         {
             if (playerEach[player].playerRespawnTimer <= 0)
             {
-                playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(playerEach[player].PlayerRespawnPosition, respawnPosition.y, playerEach[player].playerController.transform.position.z));
+                playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y));
                 playerEach[player].playerController.transform.gameObject.SetActive(true);
-                playerEach[player].playerController.IsCheckTile(SnapToGrid(playerEach[player].playerController.transform.position));
+                playerEach[player].playerController.IsCheckTile(playerEach[player].playerController.transform.position);
                 playerEach[player].playerAlive = true;
                 playerEach[player].playerRespawnTimer = playerRespawnTimer;
                 playerEach[player].playerDeath = false;
@@ -342,10 +339,11 @@ namespace MoleSurvivor
             #endregion
             // INSTANTIATE FINISH LINE
             #region INSTANTIATE FINISH LEVEL
-            finishPosition = new Vector3(0, endGoal + playerFinishHeightLocation, inGameCamera.position.z);
             _instaFinishLine = Instantiate(finishLine);
             _instaFinishLine.parent = levelGridParent;
-            _instaFinishLine.position = SnapToGrid(new Vector3(0, finishPosition.y, 0));
+            Vector3 fPos = new Vector3(0.5f, endGoal + playersFinishPosition, inGameCamera.position.z);
+            finishPosition = SnapToGrid(fPos);
+            _instaFinishLine.position = new Vector3(0, finishPosition.y, 0);
             #endregion
             // SET PLAYERHUB POSITION
             #region I WILL UPDATE THIS LATER
@@ -594,36 +592,57 @@ namespace MoleSurvivor
 
             //---------------------------------------------------------------------------------------
 
-            Gizmos.color = Color.red;
+            // START LINE
 
-            respawnPosition = new Vector3(0, inGameCamera.position.y + playerRespawnHeightLocation, inGameCamera.position.z);
+            Gizmos.color = Color.yellow;
+            Vector3 startPos = new Vector3(0.5f, inGameCamera.position.y + playersStartPosition, inGameCamera.position.z);
+            Vector3 startPositionSnap = SnapToGrid(startPos);
+            startPosition = new Vector3(0, startPositionSnap.y, startPos.z);
+            Gizmos.DrawLine(startPosition + new Vector3(-horizontal, 0), startPosition + new Vector3(horizontal, 0));
+
+            //---------------------------------------------------------------------------------------
+
+            // RESPAWN LINE
+
+            Gizmos.color = Color.red;
+            Vector3 respawnPos = new Vector3(0.5f, inGameCamera.position.y + playersRespawnPosition, inGameCamera.position.z);
+            Vector3 respawnPositionSnap = SnapToGrid(respawnPos);
+            respawnPosition = new Vector3(0, respawnPositionSnap.y, respawnPos.z);
             Gizmos.DrawLine(respawnPosition + new Vector3(-horizontal, 0), respawnPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
 
-            Gizmos.color = Color.blue;
+            // DEATH LINE
 
-            deathPosition = new Vector3(0, inGameCamera.position.y + playerDeathHeightLocation, inGameCamera.position.z);
+            Gizmos.color = Color.blue;
+            deathPosition = new Vector3(0, inGameCamera.position.y + playersDeathPosition, inGameCamera.position.z);
             Gizmos.DrawLine(deathPosition + new Vector3(-horizontal, 0), deathPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
 
-            Gizmos.color = Color.white;
+            // FINISH LINE
 
-            Vector3 fPosition = new Vector3(0, inGameCamera.position.y + playerFinishHeightLocation, inGameCamera.position.z);
-            Gizmos.DrawLine(fPosition + new Vector3(-horizontal, 0), fPosition + new Vector3(horizontal, 0));
+            Gizmos.color = Color.white;
+            Vector3 finishPos = new Vector3(0.5f, inGameCamera.position.y + playersFinishPosition, inGameCamera.position.z);
+            Vector3 finishPositionSnap = SnapToGrid(finishPos);
+            Vector3 finishPosition = new Vector3(0, finishPositionSnap.y, finishPos.z);
+            Gizmos.DrawLine(finishPosition + new Vector3(-horizontal, 0), finishPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
+
+            // OUT OF BOUNDS LINE
 
             Gizmos.color = Color.blue;
 
-            Vector3 boundSidePositionLeft = new Vector3(-playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);
+            Vector3 boundSidePositionLeft = new Vector3(-playersBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionLeft + new Vector3(0, -vertical), boundSidePositionLeft + new Vector3(0, vertical));
 
-            Vector3 boundSidePositionRight = new Vector3(playerBoundLocation, inGameCamera.position.y, inGameCamera.position.z);
+            Vector3 boundSidePositionRight = new Vector3(playersBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
 
             //---------------------------------------------------------------------------------------
+
+            // GRID COLUMN LINE
 
             if (cColumns > 0)
             {
