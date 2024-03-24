@@ -422,8 +422,25 @@ namespace MoleSurvivor
         #endregion
         //-----------------------------------------------------------------------------------------------------------------------------------------
 
+        // How many Grid Columns based on the LevelStage.cs
+        #region Grid Columns
+        [Min(0)] public float range;
+        
+        private int columns; // Renamed to columns for clarity
+        [HideInInspector] public List<Vector3> GridColumns; // Now tracking columns
+        [HideInInspector] public int cColumns; // Renamed to cColumns for clarity
+        #endregion
+
         private void Start()
         {
+            // MAKE GRID COLUMNS
+            #region GRID COLUMNS
+            columns = playersActive;
+            cColumns = columns; // Create how many Grid Columns
+            range = horizontal * 2; // Using horizontal range for vertical lines
+            foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
+            { GridColumns.Add(-r.origin); }
+            #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
             // INSTANTIATE LEVELS
             #region INSTANTIATE LEVELS
@@ -638,6 +655,22 @@ namespace MoleSurvivor
             return player;
         }
 
+        Ray[] GetGridColumns(Transform origin, float range, int count)
+        {
+            Ray[] rays = new Ray[count];
+            float spacing = range / (count - 1);
+            float start = -range / 2f;
+            for (int i = 0; i < count; i++)
+            {
+                float currentX = start + i * spacing;
+                Vector3 ori = new Vector3(currentX, 0, 0) / 1.5f + origin.position;
+                Vector3 oriSnap = SnapToGrid(ori);
+                rays[i].origin = new Vector3(oriSnap.x, ori.y, ori.z);
+                rays[i].direction = -origin.up; // Columns extend vertically, so we use up
+            }
+            return rays;
+        }
+
         public void SetDestroy()
         {
             Destroy(this.gameObject);
@@ -738,6 +771,14 @@ namespace MoleSurvivor
 
             //---------------------------------------------------------------------------------------
 
+            if (cColumns > 0)
+            {
+                foreach (var r in GetGridColumns(inGameCamera.transform, range, cColumns)) // Drawing columns
+                {
+                    Gizmos.color = Color.white;
+                    Gizmos.DrawLine(new Vector3(r.origin.x, r.origin.y + vertical, r.origin.z), new Vector3(r.origin.x, r.origin.y - vertical, r.origin.z));
+                }
+            }
         }
 
     }

@@ -6091,6 +6091,9 @@ MonoBehaviour:
   finishPosition: {x: 0, y: 0, z: 0}
   playersFinishPlace: []
   allPlayerFinishLevel: 0
+  range: 22
+  GridColumns: []
+  cColumns: 0
 --- !u!4 &1237608681
 Transform:
   m_ObjectHideFlags: 0
