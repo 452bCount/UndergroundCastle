@@ -203,8 +203,7 @@ namespace MoleSurvivor
             // Set Player Start
             if (playerCustom.playerAlive == true) 
             {
-                playerCustom.playerController.transform.position = new Vector3(pStartPosition, startPosition.y, playerCustom.playerController.transform.position.z);
-
+                playerCustom.playerController.transform.position = SnapToGrid(new Vector3(pStartPosition, startPosition.y, playerCustom.playerController.transform.position.z));
                 playerCustom.playerController.currentHealth = playerHealth;
                 playerCustom.playerController.moveSpeed = playerMoveSpeed;
                 playerCustom.playerController.rotateDuration = playerRotateSpeed;
