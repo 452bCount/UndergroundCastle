@@ -10,7 +10,7 @@ namespace MoleSurvivor
     public class PlayerController : MonoBehaviour
     {
         // The Rewired player id of this character
-        [HideInInspector] public int playerId = 0;
+        public int playerId = 0;
         // The Rewired Player
         private Player player;
 

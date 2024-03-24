@@ -6039,55 +6039,34 @@ MonoBehaviour:
   player2: {fileID: 205914719}
   player3: {fileID: 945404785}
   player4: {fileID: 682836401}
+  pCollection: []
   player1Health: {fileID: 1995876920}
   player2Health: {fileID: 985618436}
   player3Health: {fileID: 746911676}
   player4Health: {fileID: 2035348243}
+  pHudCollection: []
   player1Color: {r: 1, g: 0, b: 0, a: 1}
   player2Color: {r: 0, g: 0.14160705, b: 0.9811321, a: 1}
   player3Color: {r: 1, g: 0.8260877, b: 0, a: 1}
   player4Color: {r: 0, g: 0.6320754, b: 0.11398083, a: 1}
+  pColorCollection: []
   setAllPlayerHeight: 8
-  only1Player: 0
-  only2Player1: -6
-  only2Player2: 6
-  only3Player1: -8
-  only3Player2: 0
-  only3Player3: 8
-  only4Player1: -12
-  only4Player2: -4
-  only4Player3: 4
-  only4Player4: 12
-  playerRespawnTimer: 10
-  playerRespawnHeightLocation: 5.16
-  only1player1RespawnLocation: 0
-  only1playersRespawnLocationDebug: 0
-  only2player1RespawnLocation: -6.6
-  only2player2RespawnLocation: 6.6
-  only2playersRespawnLocationDebug: 0
-  only3player1RespawnLocation: -7.6
-  only3player2RespawnLocation: 0
-  only3player3RespawnLocation: 7.6
-  only3playersRespawnLocationDebug: 0
-  only4player1RespawnLocation: -11.6
-  only4player2RespawnLocation: -4.6
-  only4player3RespawnLocation: 4.6
-  only4player4RespawnLocation: 11.6
-  only4playersRespawnLocationDebug: 0
-  playerDeathHeightLocation: 21.7
-  playerBoundLocation: 12.16
-  playerFinishHeightLocation: -5.96
+  playerRespawnTimer: 0.5
+  playerRespawnHeightLocation: 4.76
+  playerDeathHeightLocation: 8.67
+  playerBoundLocation: 14.89
+  playerFinishHeightLocation: -5.7
   playerHealthHeightLocation: -414
   playerMoveSpeed: 10
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
   playerHealth: 10
-  playersActive: 4
+  playersActive: 3
   soloMode: 1
   inGameCameraColumns: []
   playerEach: []
-  respawnPosition: {x: 0, y: 10.16, z: -17}
-  deathPosition: {x: 0, y: 26.7, z: -17}
+  respawnPosition: {x: 0, y: 9.76, z: -17}
+  deathPosition: {x: 0, y: 13.67, z: -17}
   finishPosition: {x: 0, y: 0, z: 0}
   playersFinishPlace: []
   allPlayerFinishLevel: 0
