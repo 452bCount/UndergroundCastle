@@ -411,12 +411,12 @@ namespace MoleSurvivor
                 if (playersFinishPlace.Count >= playersActive)
                 {
                     allPlayerFinishLevel = true;
+                }
 
-                    foreach (var pEach in playerEach)
-                    {
-                        if (pEach.playerController.transform.position.y < _instaFinishLine.position.y)
-                        { OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach)); }
-                    }
+                foreach (var pEach in playerEach)
+                {
+                    if (pEach.playerController.transform.position.y < _instaFinishLine.position.y)
+                    { OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach)); }
                 }
 
                 if (_instaFinishLine.position.y >= (inGameCamera.position.y - vertical) && seeFinishLine == false) 

@@ -6070,7 +6070,7 @@ MonoBehaviour:
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
   playerHealth: 10
-  playersActive: 1
+  playersActive: 2
   soloMode: 1
   inGameCameraColumns: []
   playerEach: []
