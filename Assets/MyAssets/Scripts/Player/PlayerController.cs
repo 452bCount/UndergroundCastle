@@ -36,7 +36,9 @@ namespace MoleSurvivor
         [HideInInspector] public float horizontalInput;
         [HideInInspector] public float prevHorizontalInput;
         [HideInInspector] public bool finishLine;
+        [ReadOnly] public bool seeFinishLine;
         [HideInInspector] public float boundarySide;
+        [HideInInspector] public float boundaryBottom;
         #region
 
         public void AssignGamepad(int pId)
@@ -106,8 +108,9 @@ namespace MoleSurvivor
 
                 // Check Before Move
                 IsCheckTile(targetPos);
-                if (targetPos.x > boundarySide || targetPos.x < -boundarySide)//stop moving when past the 12.8m border
-                    return;
+                if (targetPos.x > boundarySide && finishLine == false || targetPos.x < -boundarySide && finishLine == false || targetPos.y < boundaryBottom && seeFinishLine == false)//stop moving when past the 12.8m border
+                { return; }
+
                 // Move
                 characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateDuration, rotateDelay, isAllowedToMove);
             }
@@ -147,7 +150,7 @@ namespace MoleSurvivor
             {
                 if (c.GetComponent<TileDestroyer>() != null)
                 {
-                    if (targetPos.x > boundarySide || targetPos.x < -boundarySide)//stop breaking blocks past the 12.8m border
+                    if (targetPos.x > boundarySide && finishLine == false || targetPos.x < -boundarySide && finishLine == false || targetPos.y < boundaryBottom && seeFinishLine == false)//stop breaking blocks past the 12.8m border
                         return;
                     TileDestroyer coll = c.GetComponent<TileDestroyer>();
                     coll.DestroyTile(targetPos);

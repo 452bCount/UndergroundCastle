@@ -135,9 +135,12 @@ namespace MoleSurvivor
         [TitleGroup("BOX PLAYER/PLAYER DEATH LINE", "Set all the players death position")]
         public float playersDeathPosition;
 
-        [BoxGroup("BOX PLAYER")] [LabelText("Bound Line")]
+        [BoxGroup("BOX PLAYER")] [LabelText("Bound Side Line")]
         [TitleGroup("BOX PLAYER/PLAYER BOUND LINE")]
-        public float playersBoundPosition;
+        public float playersSideBoundPosition;
+
+        [BoxGroup("BOX PLAYER")] [LabelText("Bound Bottom Line")]
+        public float playersBottomBoundPosition;
 
         [BoxGroup("BOX PLAYER")] [LabelText("Finish Line")]
         [TitleGroup("BOX PLAYER/PLAYER FINISH LINE", "Set finish position")]
@@ -175,8 +178,10 @@ namespace MoleSurvivor
         [HideInInspector] public Vector3 respawnPosition;
         [HideInInspector] public Vector3 deathPosition;
         [HideInInspector] public Vector3 finishPosition;
+        [HideInInspector] public Vector3 boundBottomPosition;
         [ReadOnly] public List<Transform> playersFinishPlace;
         [ReadOnly] public bool allPlayerFinishLevel;
+        [ReadOnly] public bool seeFinishLine;
         #endregion
         //-----------------------------------------------------------------------------------------------------------------------------------------
         //NEXT
@@ -211,7 +216,7 @@ namespace MoleSurvivor
 
                 playerCustom.playerController.singleMovement = soloMode;
 
-                playerCustom.playerController.boundarySide = playersBoundPosition;
+                playerCustom.playerController.boundarySide = playersSideBoundPosition;
 
                 playerCustom.playerController.playerColor = pColor;
                 playerCustom.playerController.playerHud = playerCustom.playerHealth;
@@ -260,6 +265,8 @@ namespace MoleSurvivor
             PlayersRespawn(pNumber);
             // Update each player's spawn timer if it's above 0
             if (playerEach[pNumber].playerDeath == true) { playerEach[pNumber].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(pNumber); }
+            // Update when bottom bound
+            playerEach[pNumber].playerController.boundaryBottom = boundBottomPosition.y;
         }
 
         void PlayersRespawn(int player)
@@ -303,7 +310,7 @@ namespace MoleSurvivor
         [Min(0)] public float range;
         
         private int columns; // Renamed to columns for clarity
-        [HideInInspector] public List<Vector3> GridColumns; // Now tracking columns
+        [ReadOnly] public List<Vector3> GridColumns; // Now tracking columns
         [HideInInspector] public int cColumns; // Renamed to cColumns for clarity
         #endregion
 
@@ -314,8 +321,17 @@ namespace MoleSurvivor
             columns = playersActive;
             cColumns = columns; // Create how many Grid Columns
             range = horizontal * 2; // Using horizontal range for vertical lines
-            foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
-            { GridColumns.Add(r.origin); }
+
+            if (playersActive == 1)
+            {
+                GridColumns.Add(inGameCamera.position);
+            }
+            else if (playersActive >= 2)
+            {
+                foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
+                { GridColumns.Add(r.origin); }
+            }
+
             #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
             // INSTANTIATE LEVELS
@@ -389,27 +405,9 @@ namespace MoleSurvivor
 
             if (active)
             {
-                if (playersActive == 1)
+                for (int i = 0; i < playersActive; i++)
                 {
-                    PUpdates(0);
-                }
-                else if (playersActive == 2)
-                {
-                    PUpdates(0);
-                    PUpdates(1);
-                }
-                else if (playersActive == 3)
-                {
-                    PUpdates(0);
-                    PUpdates(1);
-                    PUpdates(2);
-                }
-                else if (playersActive == 4)
-                {
-                    PUpdates(0);
-                    PUpdates(1);
-                    PUpdates(2);
-                    PUpdates(3);
+                    PUpdates(i);
                 }
 
                 // Set the Level to false
@@ -427,6 +425,16 @@ namespace MoleSurvivor
                         if (pEach.playerController.transform.position.y < _instaFinishLine.position.y)
                         { OutsideBound(pEach.playerController.transform, 0, false, () => SetPlayerAfterFinish(pEach)); }
                     }
+                }
+
+                if (_instaFinishLine.position.y >= (inGameCamera.position.y - vertical) && seeFinishLine == false) 
+                {
+                    foreach (var pEach in playerEach)
+                    {
+                        pEach.playerController.seeFinishLine = true;
+                    }
+
+                    seeFinishLine = true;
                 }
             }
         }
@@ -629,15 +637,27 @@ namespace MoleSurvivor
 
             //---------------------------------------------------------------------------------------
 
-            // OUT OF BOUNDS LINE
+            // OUT OF SIDE BOUNDS LINE
 
             Gizmos.color = Color.blue;
 
-            Vector3 boundSidePositionLeft = new Vector3(-playersBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
+            Vector3 boundSidePositionLeft = new Vector3(-playersSideBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionLeft + new Vector3(0, -vertical), boundSidePositionLeft + new Vector3(0, vertical));
 
-            Vector3 boundSidePositionRight = new Vector3(playersBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
+            Vector3 boundSidePositionRight = new Vector3(playersSideBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
+
+            // OUT OF BOTTOM BOUNDS LINE
+
+            Gizmos.color = Color.blue;
+            Vector3 boundBottomPos = new Vector3(0.5f, inGameCamera.position.y + playersBottomBoundPosition, inGameCamera.position.z);
+            Vector3 boundBottomPositionSnap = SnapToGrid(boundBottomPos);
+            boundBottomPosition = new Vector3(0, boundBottomPositionSnap.y, boundBottomPos.z);
+            Gizmos.DrawLine(boundBottomPosition + new Vector3(-horizontal, 0), boundBottomPosition + new Vector3(horizontal, 0));
+
+            Gizmos.DrawSphere(new Vector3(0, inGameCamera.position.y - vertical, 0), 2f);
+            Gizmos.DrawSphere(new Vector3(10, inGameCamera.position.y - vertical, 0), 2f);
+            Gizmos.DrawSphere(new Vector3(-10, inGameCamera.position.y - vertical, 0), 2f);
 
             //---------------------------------------------------------------------------------------
 
