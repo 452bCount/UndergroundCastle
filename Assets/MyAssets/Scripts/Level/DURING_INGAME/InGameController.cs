@@ -322,16 +322,8 @@ namespace MoleSurvivor
             cColumns = columns; // Create how many Grid Columns
             range = horizontal * 2; // Using horizontal range for vertical lines
 
-            if (playersActive == 1)
-            {
-                GridColumns.Add(inGameCamera.position);
-            }
-            else if (playersActive >= 2)
-            {
-                foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
-                { GridColumns.Add(r.origin); }
-            }
-
+            foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
+            { GridColumns.Add(r.origin); }
             #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
             // INSTANTIATE LEVELS
@@ -540,19 +532,55 @@ namespace MoleSurvivor
             return player;
         }
 
+        #region
+        //Ray[] GetGridColumns(Transform origin, float range, int count)
+        //{
+        //    Ray[] rays = new Ray[count];
+        //    float spacing = range / (count - 1);
+        //    float start = -range / 2f;
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        float currentX = start + i * spacing;
+        //        Vector3 ori = new Vector3(currentX, 0, 0) / 1.5f + origin.position;
+        //        Vector3 oriSnap = SnapToGrid(ori);
+        //        rays[i].origin = new Vector3(oriSnap.x, ori.y, ori.z);
+        //        rays[i].direction = -origin.up; // Columns extend vertically, so we use up
+        //    }
+        //    return rays;
+        //}
+        #endregion
+
         Ray[] GetGridColumns(Transform origin, float range, int count)
         {
-            Ray[] rays = new Ray[count];
-            float spacing = range / (count - 1);
-            float start = -range / 2f;
-            for (int i = 0; i < count; i++)
+            if (count < 1)
             {
-                float currentX = start + i * spacing;
-                Vector3 ori = new Vector3(currentX, 0, 0) / 1.5f + origin.position;
-                Vector3 oriSnap = SnapToGrid(ori);
-                rays[i].origin = new Vector3(oriSnap.x, ori.y, ori.z);
-                rays[i].direction = -origin.up; // Columns extend vertically, so we use up
+                // Return an empty array or handle error as preferred
+                return new Ray[0];
             }
+
+            Ray[] rays = new Ray[count];
+
+            if (count == 1)
+            {
+                // If count is 1, set the single ray directly at the origin's position
+                Vector3 oriSnap = SnapToGrid(origin.position);
+                rays[0].origin = new Vector3(oriSnap.x, origin.position.y, origin.position.z);
+                rays[0].direction = -origin.up;
+            }
+            else if (count > 1)
+            {
+                float spacing = range / (count - 1);
+                float start = -range / 2f;
+                for (int i = 0; i < count; i++)
+                {
+                    float currentX = start + i * spacing;
+                    Vector3 ori = new Vector3(currentX, 0, 0) / 1.5f + origin.position;
+                    Vector3 oriSnap = SnapToGrid(ori);
+                    rays[i].origin = new Vector3(oriSnap.x, ori.y, ori.z);
+                    rays[i].direction = -origin.up; // Columns extend vertically, so we use up
+                }
+            }
+
             return rays;
         }
 
