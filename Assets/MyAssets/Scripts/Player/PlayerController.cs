@@ -133,7 +133,6 @@ namespace MoleSurvivor
 
             foreach (Collider c in colliders)
             {
-
                 if (c.GetComponent<Trap>() != null)
                 {
                     Trap coll = c.GetComponent<Trap>();

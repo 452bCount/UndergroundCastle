@@ -12,11 +12,17 @@ namespace MoleSurvivor
         [Header("MOVEMENT & ROTATION")]
         public float moveSpeed = 5f;
         public float rotateSpeed = 10f;
-
-        public float damageToPlayer = 1f;
-
         public enum MovementType { None, LeftDown, LeftUp, RightDown, RightUp };
         public MovementType moveType;
+
+        [Header("DETECT & DAMAGE")]
+        public float detectPlayer = 0f;
+        public float damageToPlayer = 1f;
+
+        [Header("GIZMO")]
+        public float gizmoLength = 15f;
+
+        private bool setActive;
 
         private Vector2 _inputM;
         private float _inputR;
@@ -60,52 +66,64 @@ namespace MoleSurvivor
 
         void Update()
         {
-            #region InputType
-            switch (moveType)
+            for (int i = 0; i < InGameController.Instance.playerEach.Count; i++)
             {
-                case MovementType.LeftDown:
-                    // Code to execute when moveType is LeftDown
-                    InputLeftDownUpdate();
-                    break;
-                case MovementType.LeftUp:
-                    // Code to execute when moveType is LeftUp
-                    InputLeftUpUpdate();
-                    break;
-                case MovementType.RightDown:
-                    // Code to execute when moveType is RightDown
-                    InputRightDownUpdate();
-                    break;
-                case MovementType.RightUp:
-                    // Code to execute when moveType is RightUp
-                    InputRightUpUpdate();
-                    break;
-                default:
-                    // Optional: Code to execute if none of the above cases match
-                    break;
-            }
-            #endregion
-
-            #region Move
-            if (!characterMovement.ReturnCheckIsMoving())
-            {
-                if (_inputM != Vector2.zero) // I only put this so it could stop when pause
+                if ((InGameController.Instance.playerEach[i].playerController.gameObject.transform.position.y + detectPlayer) < this.transform.position.y)
                 {
-                    // Calculate the direction based on the current rotation
-                    Vector3 direction = _inputM;
-
-                    // Update targetPos based on the direction
-                    targetPos = transform.position + direction;
-                    targetPos = new Vector3Int(Mathf.RoundToInt(targetPos.x), Mathf.RoundToInt(targetPos.y), Mathf.RoundToInt(targetPos.z));
-
-                    // Check Before Move
-                    IsCheckTile(targetPos);
-
-                    // Move
-                    //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
-                    characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                    setActive = true;
                 }
             }
-            #endregion
+
+            if (setActive == true)
+            {
+                #region InputType
+                switch (moveType)
+                {
+                    case MovementType.LeftDown:
+                        // Code to execute when moveType is LeftDown
+                        InputLeftDownUpdate();
+                        break;
+                    case MovementType.LeftUp:
+                        // Code to execute when moveType is LeftUp
+                        InputLeftUpUpdate();
+                        break;
+                    case MovementType.RightDown:
+                        // Code to execute when moveType is RightDown
+                        InputRightDownUpdate();
+                        break;
+                    case MovementType.RightUp:
+                        // Code to execute when moveType is RightUp
+                        InputRightUpUpdate();
+                        break;
+                    default:
+                        // Optional: Code to execute if none of the above cases match
+                        break;
+                }
+                #endregion
+
+                #region Move
+                if (!characterMovement.ReturnCheckIsMoving())
+                {
+                    if (_inputM != Vector2.zero) // I only put this so it could stop when pause
+                    {
+                        // Calculate the direction based on the current rotation
+                        Vector3 direction = _inputM;
+
+                        // Update targetPos based on the direction
+                        targetPos = transform.position + direction;
+                        targetPos = new Vector3Int(Mathf.RoundToInt(targetPos.x), Mathf.RoundToInt(targetPos.y), Mathf.RoundToInt(targetPos.z));
+
+                        // Check Before Move
+                        IsCheckTile(targetPos);
+
+                        // Move
+                        //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
+                        characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                    }
+                }
+                #endregion
+
+            }
         }
 
         void CheckAfterMove()
@@ -123,6 +141,12 @@ namespace MoleSurvivor
                 {
                     PlayerController coll = c.GetComponent<PlayerController>();
                     coll.TakeDamage(damageToPlayer);
+                }
+
+                if (c.GetComponent<Trap>() != null)
+                {
+                    Trap coll = c.GetComponent<Trap>();
+                    Destroy(coll.gameObject);
                 }
             }
         }
@@ -158,6 +182,11 @@ namespace MoleSurvivor
             Gizmos.DrawWireSphere(transform.position + new Vector3(1, -1, 0), 0.2f);
             Gizmos.DrawWireSphere(transform.position + new Vector3(-1, 1, 0), 0.2f);
             Gizmos.DrawWireSphere(transform.position + new Vector3(-1, -1, 0), 0.2f);
+
+            Gizmos.color = new Color(0, 0, 1, 0.45f);
+            Gizmos.DrawCube(new Vector3(transform.position.x, transform.position.y - detectPlayer, transform.position.z), new Vector3(gizmoLength, 0.25f, 0.5f));
+            Gizmos.color = new Color(0.5f, 0.5f, 1, 1f);
+            Gizmos.DrawWireCube(new Vector3(transform.position.x, transform.position.y - detectPlayer, transform.position.z), new Vector3(gizmoLength, 0.25f, 0.5f));
         }
     }
 }

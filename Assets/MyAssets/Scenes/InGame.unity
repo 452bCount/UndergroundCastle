@@ -6085,7 +6085,7 @@ MonoBehaviour:
   levelGridParent: {fileID: 2049119912}
   delayText: {fileID: 914350236}
   countdownStartValue: 3
-  delayBetweenCountdown: 0
+  delayBetweenCountdown: 1
   eachLayerSize: 30
   levelDuration: 20
   levelSandwitch:
