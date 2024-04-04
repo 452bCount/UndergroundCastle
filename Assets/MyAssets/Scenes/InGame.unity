@@ -474,6 +474,7 @@ GameObject:
   - component: {fileID: 120083448}
   - component: {fileID: 120083447}
   - component: {fileID: 120083449}
+  - component: {fileID: 120083450}
   m_Layer: 0
   m_Name: P1_Controller
   m_TagString: Untagged
@@ -542,6 +543,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7356b2402fee32342ae56379408d7671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &120083450
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120083446}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &173358066
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,6 +785,7 @@ GameObject:
   - component: {fileID: 205914720}
   - component: {fileID: 205914719}
   - component: {fileID: 205914718}
+  - component: {fileID: 205914721}
   m_Layer: 0
   m_Name: P2_Controller
   m_TagString: Untagged
@@ -839,6 +854,19 @@ Transform:
   m_Father: {fileID: 1198911447}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &205914721
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 205914717}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &248281764
 GameObject:
   m_ObjectHideFlags: 0
@@ -3082,6 +3110,7 @@ GameObject:
   - component: {fileID: 682836402}
   - component: {fileID: 682836401}
   - component: {fileID: 682836400}
+  - component: {fileID: 682836403}
   m_Layer: 0
   m_Name: P4_Controller
   m_TagString: Untagged
@@ -3150,6 +3179,19 @@ Transform:
   m_Father: {fileID: 1198911447}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &682836403
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682836399}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -4680,6 +4722,7 @@ GameObject:
   - component: {fileID: 945404786}
   - component: {fileID: 945404785}
   - component: {fileID: 945404784}
+  - component: {fileID: 945404787}
   m_Layer: 0
   m_Name: P3_Controller
   m_TagString: Untagged
@@ -4748,6 +4791,19 @@ Transform:
   m_Father: {fileID: 1198911447}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &945404787
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945404783}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &961339381
 GameObject:
   m_ObjectHideFlags: 0
@@ -6029,11 +6085,11 @@ MonoBehaviour:
   levelGridParent: {fileID: 2049119912}
   delayText: {fileID: 914350236}
   countdownStartValue: 3
-  delayBetweenCountdown: 1
+  delayBetweenCountdown: 0
   eachLayerSize: 30
   levelDuration: 20
   levelSandwitch:
-  - {fileID: 5852077295948200514, guid: a6b42cb8225b16a4396cec7ee7d60ec1, type: 3}
+  - {fileID: 1961008153974976428, guid: 294e5a5ce81769c4abc15274e1240524, type: 3}
   - {fileID: 1961008153974976428, guid: fe21afb951e02984d847344e735a6646, type: 3}
   - {fileID: 2111411902504925195, guid: 1383e3cbe202ace4eac3324a95518f28, type: 3}
   inGameCamera: {fileID: 727346680}

@@ -13,6 +13,8 @@ namespace MoleSurvivor
         public float moveSpeed = 5f;
         public float rotateSpeed = 10f;
 
+        public float damageToPlayer = 1f;
+
         public enum MovementType { None, LeftDown, LeftUp, RightDown, RightUp };
         public MovementType moveType;
 
@@ -100,10 +102,29 @@ namespace MoleSurvivor
 
                     // Move
                     //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
-                    characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                    characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
                 }
             }
             #endregion
+        }
+
+        void CheckAfterMove()
+        {
+            IsCheckTargetPos(targetPos);
+        }
+
+        void IsCheckTargetPos(Vector3 targetPos)
+        {
+            Collider[] colliders = Physics.OverlapSphere(targetPos, 0.3f);
+
+            foreach (Collider c in colliders)
+            {
+                if (c.GetComponent<PlayerController>() != null)
+                {
+                    PlayerController coll = c.GetComponent<PlayerController>();
+                    coll.TakeDamage(damageToPlayer);
+                }
+            }
         }
 
         void IsCheckTile(Vector3 targetPos)

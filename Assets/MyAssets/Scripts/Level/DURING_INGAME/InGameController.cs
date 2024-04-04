@@ -380,8 +380,8 @@ namespace MoleSurvivor
             // Set how many players are active
             SetPlayers(playersActive);
 
-            // Start the coroutine to move the camera
-            StartCoroutine(MoveCameraCoroutine());
+            //// Start the coroutine to move the camera
+            //StartCoroutine(MoveCameraCoroutine());
             #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
         }
@@ -682,10 +682,6 @@ namespace MoleSurvivor
             Vector3 boundBottomPositionSnap = SnapToGrid(boundBottomPos);
             boundBottomPosition = new Vector3(0, boundBottomPositionSnap.y, boundBottomPos.z);
             Gizmos.DrawLine(boundBottomPosition + new Vector3(-horizontal, 0), boundBottomPosition + new Vector3(horizontal, 0));
-
-            Gizmos.DrawSphere(new Vector3(0, inGameCamera.position.y - vertical, 0), 2f);
-            Gizmos.DrawSphere(new Vector3(10, inGameCamera.position.y - vertical, 0), 2f);
-            Gizmos.DrawSphere(new Vector3(-10, inGameCamera.position.y - vertical, 0), 2f);
 
             //---------------------------------------------------------------------------------------
 
