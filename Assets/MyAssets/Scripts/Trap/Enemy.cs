@@ -120,6 +120,8 @@ namespace MoleSurvivor
                         //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
                         characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
                     }
+
+                    SetEnemyDestroy();
                 }
                 #endregion
 
@@ -162,6 +164,32 @@ namespace MoleSurvivor
                     TileDestroyer coll = c.GetComponent<TileDestroyer>();
                     coll.DestroyTile(targetPos);
                 }
+            }
+        }
+
+        void SetEnemyDestroy()
+        {
+            // Assuming inGameCamera, horizontal, vertical, and _screenSpace are already defined
+
+            // Center position based on the inGameCamera
+            Vector3 centerPosition = InGameController.Instance.inGameCamera.position;
+
+            // Inner boundaries
+            float innerLeft = centerPosition.x - InGameController.Instance.horizontal;
+            float innerRight = centerPosition.x + InGameController.Instance.horizontal;
+            float innerBottom = centerPosition.y - InGameController.Instance.vertical;
+            float innerTop = centerPosition.y + InGameController.Instance.vertical;
+
+            // Outer boundaries (expanded by _screenSpace)
+            float outerLeft = innerLeft - InGameController.Instance._screenSpace.x;
+            float outerRight = innerRight + InGameController.Instance._screenSpace.x;
+            float outerBottom = innerBottom - InGameController.Instance._screenSpace.y;
+            float outerTop = innerTop + InGameController.Instance._screenSpace.y;
+
+            if (transform.position.x < outerLeft || transform.position.x > outerRight || transform.position.y > outerTop)
+            {
+                characterMovement.StopDotweenCoroutine();
+                Destroy(this.gameObject);
             }
         }
 

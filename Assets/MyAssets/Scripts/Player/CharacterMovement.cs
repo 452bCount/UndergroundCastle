@@ -12,8 +12,14 @@ namespace MoleSurvivor
         private Coroutine rotateDelayCoroutine;
         private float distance;
 
+        private Transform targetTransform;
+        private Transform targetOrientation;
+
         public void Move( Action checkBeforeMove, Action checkAfterMove, Transform _targetTransform, Transform _targetOrientation, Vector3 targetPos, Vector3 targetRotate, float moveSpeed, float rotationSpeed, float delayRotation = 0, bool isAllowedToMove = true)
         {
+            targetTransform = _targetTransform;
+            targetOrientation = _targetOrientation;
+
             checkBeforeMove?.Invoke();
 
             if (isAllowedToMove != true)
@@ -64,6 +70,26 @@ namespace MoleSurvivor
         {
             yield return new WaitForSeconds(rotationResetDelay);
             targetOrientation.DORotate(Vector3.zero, rotateDuration);
+        }
+
+        public void StopDotweenCoroutine()
+        {
+            if (rotateDelayCoroutine != null)
+            {
+                StopCoroutine(rotateDelayCoroutine);
+                rotateDelayCoroutine = null; // Nullify the reference after stopping
+            }
+
+            // Kill all DOTween animations for targetTransform and targetOrientation
+            if (targetTransform != null)
+            {
+                targetTransform.DOKill(); // This stops all DOTween animations on targetTransform
+            }
+
+            if (targetOrientation != null)
+            {
+                targetOrientation.DOKill(); // This stops all DOTween animations on targetTransform
+            }
         }
 
         public bool ReturnCheckIsMoving()
