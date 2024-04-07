@@ -171,8 +171,6 @@ namespace MoleSurvivor
         //-----------------------------------------------------------------------------------------------------------------------------------------
         // OTHER SETTINGS
         #region OTHER SETTINGS
-        [ReadOnly] public List<float> inGameCameraColumns = new List<float>();
-
         [ReadOnly] public List<PlayerCustom> playerEach;
         [HideInInspector] public Vector3 startPosition;
         [HideInInspector] public Vector3 respawnPosition;
@@ -188,16 +186,11 @@ namespace MoleSurvivor
         //-----------------------------------------------------------------------------------------------------------------------------------------
         // START PLAYER FUNCTION
         #region START PLAYER FUNCTION
-        void SetStartPlayerCustom(PlayerCustom playerCustom, PlayerController player, PlayerHud pHealth, Color pColor, float gridPos, int pGamepad, float assignHudPosition)
+        void SetStartPlayerCustom(PlayerCustom playerCustom, PlayerController player, PlayerHud pHealth, Color pColor, float gridPos, int pGamepad)
         {
             playerCustom.playerController = player;
             playerCustom.playerHealth = pHealth;
             playerCustom.playerColor = pColor;
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            playerCustom.playerHealth.transform.localPosition = 
-            new Vector3(assignHudPosition, playerHealthHeightLocation, playerCustom.playerHealth.transform.localPosition.z);
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Set Player Position
             float pStartPosition = gridPos;
@@ -252,7 +245,7 @@ namespace MoleSurvivor
             for (int i = 0; i < playersActive; i++)
             {
                 playerEach.Add(new PlayerCustom());
-                SetStartPlayerCustom(playerEach[i], pCollection[i], pHudCollection[i], pColorCollection[i], GridColumns[i].x, i, inGameCameraColumns[i]);
+                SetStartPlayerCustom(playerEach[i], pCollection[i], pHudCollection[i], pColorCollection[i], GridColumns[i].x, i);
             }
         }
         #endregion
@@ -359,15 +352,6 @@ namespace MoleSurvivor
             RectTransform canvasRectTransform = inGameCanvas.GetComponent<RectTransform>();
             float canvasWidth = canvasRectTransform.rect.width;
             float columnWidth = canvasWidth / (playersActive + 1);
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // Calculate the positions of the dividing lines
-            for (int i = 1; i < (playersActive + 1); i++) // Start at 1 to skip the far left edge of the canvas
-            {
-                float linePosition = (i * columnWidth) - (canvasWidth / 2); // Subtract half canvas width to center
-                inGameCameraColumns.Add(linePosition);
-            }
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
             // START COUNTDOWN
             #region START COUNTDOWN
@@ -384,8 +368,8 @@ namespace MoleSurvivor
             // Set how many players are active
             SetPlayers(playersActive);
 
-            //// Start the coroutine to move the camera
-            //StartCoroutine(MoveCameraCoroutine());
+            // Start the coroutine to move the camera
+            StartCoroutine(MoveCameraCoroutine());
             #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
         }
