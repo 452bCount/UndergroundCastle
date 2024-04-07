@@ -194,8 +194,10 @@ namespace MoleSurvivor
             playerCustom.playerHealth = pHealth;
             playerCustom.playerColor = pColor;
 
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             playerCustom.playerHealth.transform.localPosition = 
             new Vector3(assignHudPosition, playerHealthHeightLocation, playerCustom.playerHealth.transform.localPosition.z);
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Set Player Position
             float pStartPosition = gridPos;
@@ -320,7 +322,7 @@ namespace MoleSurvivor
             #region GRID COLUMNS
             columns = playersActive;
             cColumns = columns; // Create how many Grid Columns
-            range = horizontal * 2; // Using horizontal range for vertical lines
+            //range = horizontal * 2; // Using horizontal range for vertical lines
 
             foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
             { GridColumns.Add(r.origin); }
@@ -358,12 +360,14 @@ namespace MoleSurvivor
             float canvasWidth = canvasRectTransform.rect.width;
             float columnWidth = canvasWidth / (playersActive + 1);
 
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Calculate the positions of the dividing lines
             for (int i = 1; i < (playersActive + 1); i++) // Start at 1 to skip the far left edge of the canvas
             {
                 float linePosition = (i * columnWidth) - (canvasWidth / 2); // Subtract half canvas width to center
                 inGameCameraColumns.Add(linePosition);
             }
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             #endregion
             // START COUNTDOWN
             #region START COUNTDOWN
