@@ -86,6 +86,8 @@ namespace MoleSurvivor
         [TitleGroup("BOX CAMERA HOLDER/CAMERA & GRID")]
         public Transform inGameCamera;
         [BoxGroup("BOX CAMERA HOLDER")]
+        public Transform inGameMapCam;
+        [BoxGroup("BOX CAMERA HOLDER")]
         public InGameCanvas inGameCanvas;
         [BoxGroup("BOX CAMERA HOLDER")]
         public Grid grid; // Reference to the isometric grid
@@ -97,6 +99,8 @@ namespace MoleSurvivor
         public float vertical;
         [BoxGroup("BOX CAMERA HOLDER")]
         public float horizontal;
+        [BoxGroup("BOX CAMERA HOLDER")]
+        public float MapCamClamp;
 
         Transform _instaFinishLine; // The instatiate Finish Line
         #endregion
@@ -315,7 +319,6 @@ namespace MoleSurvivor
             #region GRID COLUMNS
             columns = playersActive;
             cColumns = columns; // Create how many Grid Columns
-            //range = horizontal * 2; // Using horizontal range for vertical lines
 
             foreach (var r in GetGridColumns(inGameCamera.transform, range, columns)) // Now getting columns
             { GridColumns.Add(r.origin); }
@@ -338,6 +341,7 @@ namespace MoleSurvivor
             }
 
             currentlevelSandwitch[0].gameObject.SetActive(true);
+            currentlevelSandwitch[1].gameObject.SetActive(true);
             #endregion
             // INSTANTIATE FINISH LINE
             #region INSTANTIATE FINISH LEVEL
@@ -370,6 +374,9 @@ namespace MoleSurvivor
 
             // Start the coroutine to move the camera
             StartCoroutine(MoveCameraCoroutine());
+
+            // Start the coroutine to move the camera map
+            StartCoroutine(MoveCameraMapCoroutine());
             #endregion
             //-----------------------------------------------------------------------------------------------------------------------------------------
         }
@@ -440,6 +447,22 @@ namespace MoleSurvivor
 
             // Ensure the camera reaches exactly the target position
             inGameCamera.transform.position = new Vector3(0, endGoal, startingPosition.z);
+        }
+
+        IEnumerator MoveCameraMapCoroutine()
+        {
+            float elapsedTime = 0f;
+            Vector3 startingPosition = inGameMapCam.transform.position;
+
+            while (elapsedTime < levelDuration)
+            {
+                elapsedTime += Time.fixedDeltaTime;
+                inGameMapCam.transform.position = Vector3.Lerp(startingPosition, new Vector3(0, endGoal + MapCamClamp, startingPosition.z), elapsedTime / levelDuration);
+                yield return new WaitForFixedUpdate();
+            }
+
+            // Ensure the camera reaches exactly the target position
+            inGameMapCam.transform.position = new Vector3(0, endGoal + MapCamClamp, startingPosition.z);
         }
 
         IEnumerator CountdownRoutine(int startValue, float delay)
