@@ -9,6 +9,10 @@ public class PlayerHud : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI playerText;
     [SerializeField] public TextMeshProUGUI lifeText;
+    [SerializeField] public TextMeshProUGUI placeText;
+    [SerializeField] public Transform reloadUI;
+    [SerializeField] public Transform aliveUI;
+    [SerializeField] public Transform deathUI;
     [SerializeField] public Transform health;
     [SerializeField] public List<Image> brightHubColor;
     [SerializeField] public List<Image> darkHubColor;

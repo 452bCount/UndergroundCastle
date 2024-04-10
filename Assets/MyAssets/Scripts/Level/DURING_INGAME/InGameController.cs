@@ -357,6 +357,10 @@ namespace MoleSurvivor
             float canvasWidth = canvasRectTransform.rect.width;
             float columnWidth = canvasWidth / (playersActive + 1);
             #endregion
+            // SET PLAYERS
+            #region SET PLAYERS
+            SetPlayers(playersActive);
+            #endregion
             // START COUNTDOWN
             #region START COUNTDOWN
             StartCoroutine(CountdownRoutine(countdownStartValue, delayBetweenCountdown));
@@ -369,8 +373,8 @@ namespace MoleSurvivor
             //-----------------------------------------------------------------------------------------------------------------------------------------
             // START AFTER COUNTDOWN
             #region START AFTER COUNTDOWN
-            // Set how many players are active
-            SetPlayers(playersActive);
+            //// Set how many players are active
+            //SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
             StartCoroutine(MoveCameraCoroutine());
@@ -404,11 +408,6 @@ namespace MoleSurvivor
                     OutsideBound(currentlevelSandwitch[i], eachLayerSize / 2, true);
                 }
 
-                if (playersFinishPlace.Count >= playersActive)
-                {
-                    allPlayerFinishLevel = true;
-                }
-
                 foreach (var pEach in playerEach)
                 {
                     if (pEach.playerController.transform.position.y < _instaFinishLine.position.y)
@@ -423,6 +422,12 @@ namespace MoleSurvivor
                     }
 
                     seeFinishLine = true;
+                }
+
+                if (playersFinishPlace.Count >= playersActive)
+                {
+                    allPlayerFinishLevel = true;
+                    setActiveUpdate = false;
                 }
             }
         }
@@ -543,24 +548,6 @@ namespace MoleSurvivor
             player = grid.CellToWorld(grid.WorldToCell(player));
             return player;
         }
-
-        #region
-        //Ray[] GetGridColumns(Transform origin, float range, int count)
-        //{
-        //    Ray[] rays = new Ray[count];
-        //    float spacing = range / (count - 1);
-        //    float start = -range / 2f;
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        float currentX = start + i * spacing;
-        //        Vector3 ori = new Vector3(currentX, 0, 0) / 1.5f + origin.position;
-        //        Vector3 oriSnap = SnapToGrid(ori);
-        //        rays[i].origin = new Vector3(oriSnap.x, ori.y, ori.z);
-        //        rays[i].direction = -origin.up; // Columns extend vertically, so we use up
-        //    }
-        //    return rays;
-        //}
-        #endregion
 
         Ray[] GetGridColumns(Transform origin, float range, int count)
         {
