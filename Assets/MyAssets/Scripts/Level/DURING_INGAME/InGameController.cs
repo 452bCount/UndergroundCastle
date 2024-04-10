@@ -384,6 +384,7 @@ namespace MoleSurvivor
         private void Update()
         {
             SetUpdate(setActiveUpdate);
+            UpdateGizmos();
         }
 
         void SetUpdate(bool active)
@@ -600,6 +601,67 @@ namespace MoleSurvivor
             Destroy(this.gameObject);
         }
 
+        #region Gizmos
+
+        // Adjusted positions to center around inGameCamera
+        Vector3 gizBottomLeft, gizBottomRight, gizTopLeft, gizTopRight;
+
+        // Adjusted positions for outer borders using _screenSpace
+        Vector3 gizOuterBottomLeft, gizOuterBottomRight, gizOuterTopLeft, gizOuterTopRight;
+
+        void UpdateGizmos()
+        {
+            if (inGameCamera == null)
+            {
+                Debug.LogWarning("inGameCamera Transform is not set.");
+                return;
+            }
+
+            //---------------------------------------------------------------------------------------
+
+            // INNER & OUTER BORDER
+
+            Vector3 centerPosition = inGameCamera.position;
+
+            // Adjusted positions to center around inGameCamera
+            gizBottomLeft = centerPosition + new Vector3(-horizontal, -vertical);
+            gizBottomRight = centerPosition + new Vector3(horizontal, -vertical);
+            gizTopLeft = centerPosition + new Vector3(-horizontal, vertical);
+            gizTopRight = centerPosition + new Vector3(horizontal, vertical);
+
+            // Adjusted positions for outer borders using _screenSpace
+            gizOuterBottomLeft = gizBottomLeft + new Vector3(-_screenSpace.x, -_screenSpace.y);
+            gizOuterBottomRight = gizBottomRight + new Vector3(_screenSpace.x, -_screenSpace.y);
+            gizOuterTopLeft = gizTopLeft + new Vector3(-_screenSpace.x, _screenSpace.y);
+            gizOuterTopRight = gizTopRight + new Vector3(_screenSpace.x, _screenSpace.y);
+
+            //---------------------------------------------------------------------------------------
+
+            // START LINE
+            Vector3 startPos = new Vector3(0.5f, inGameCamera.position.y + playersStartPosition, inGameCamera.position.z);
+            Vector3 startPositionSnap = SnapToGrid(startPos);
+            startPosition = new Vector3(0, startPositionSnap.y, startPos.z);
+
+            //---------------------------------------------------------------------------------------
+
+            // RESPAWN LINE
+            Vector3 respawnPos = new Vector3(0.5f, inGameCamera.position.y + playersRespawnPosition, inGameCamera.position.z);
+            Vector3 respawnPositionSnap = SnapToGrid(respawnPos);
+            respawnPosition = new Vector3(0, respawnPositionSnap.y, respawnPos.z);
+
+            //---------------------------------------------------------------------------------------
+
+            // DEATH LINE
+            deathPosition = new Vector3(0, inGameCamera.position.y + playersDeathPosition, inGameCamera.position.z);
+
+            //---------------------------------------------------------------------------------------
+
+            // OUT OF BOTTOM BOUNDS LINE
+            Vector3 boundBottomPos = new Vector3(0.5f, inGameCamera.position.y + playersBottomBoundPosition, inGameCamera.position.z);
+            Vector3 boundBottomPositionSnap = SnapToGrid(boundBottomPos);
+            boundBottomPosition = new Vector3(0, boundBottomPositionSnap.y, boundBottomPos.z);
+        }
+
         private void OnDrawGizmos()
         {
             if (inGameCamera == null)
@@ -608,67 +670,49 @@ namespace MoleSurvivor
                 return;
             }
 
-            Vector3 centerPosition = inGameCamera.position;
+            if (!Application.isPlaying) { UpdateGizmos(); }
 
-            // Adjusted positions to center around inGameCamera
-            Vector3 bottomLeft = centerPosition + new Vector3(-horizontal, -vertical);
-            Vector3 bottomRight = centerPosition + new Vector3(horizontal, -vertical);
-            Vector3 topLeft = centerPosition + new Vector3(-horizontal, vertical);
-            Vector3 topRight = centerPosition + new Vector3(horizontal, vertical);
+            //---------------------------------------------------------------------------------------
+
+            // INNER & OUTER BORDER
 
             // Drawing inner borders
-            Gizmos.DrawLine(bottomLeft, bottomRight);
-            Gizmos.DrawLine(topLeft, topRight);
-            Gizmos.DrawLine(bottomLeft, topLeft);
-            Gizmos.DrawLine(bottomRight, topRight);
-
-            Gizmos.color = Color.yellow;
-
-            // Adjusted positions for outer borders using _screenSpace
-            Vector3 outerBottomLeft = bottomLeft + new Vector3(-_screenSpace.x, -_screenSpace.y);
-            Vector3 outerBottomRight = bottomRight + new Vector3(_screenSpace.x, -_screenSpace.y);
-            Vector3 outerTopLeft = topLeft + new Vector3(-_screenSpace.x, _screenSpace.y);
-            Vector3 outerTopRight = topRight + new Vector3(_screenSpace.x, _screenSpace.y);
+            Gizmos.color = Color.white;
+            Gizmos.DrawLine(gizBottomLeft, gizBottomRight);
+            Gizmos.DrawLine(gizTopLeft, gizTopRight);
+            Gizmos.DrawLine(gizBottomLeft, gizTopLeft);
+            Gizmos.DrawLine(gizBottomRight, gizTopRight);
 
             // Drawing outer borders
-            Gizmos.DrawLine(outerBottomLeft, outerBottomRight);
-            Gizmos.DrawLine(outerTopLeft, outerTopRight);
-            Gizmos.DrawLine(outerBottomLeft, outerTopLeft);
-            Gizmos.DrawLine(outerBottomRight, outerTopRight);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(gizOuterBottomLeft, gizOuterBottomRight);
+            Gizmos.DrawLine(gizOuterTopLeft, gizOuterTopRight);
+            Gizmos.DrawLine(gizOuterBottomLeft, gizOuterTopLeft);
+            Gizmos.DrawLine(gizOuterBottomRight, gizOuterTopRight);
 
             //---------------------------------------------------------------------------------------
 
             // START LINE
-
             Gizmos.color = Color.yellow;
-            Vector3 startPos = new Vector3(0.5f, inGameCamera.position.y + playersStartPosition, inGameCamera.position.z);
-            Vector3 startPositionSnap = SnapToGrid(startPos);
-            startPosition = new Vector3(0, startPositionSnap.y, startPos.z);
             Gizmos.DrawLine(startPosition + new Vector3(-horizontal, 0), startPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
 
             // RESPAWN LINE
-
             Gizmos.color = Color.red;
-            Vector3 respawnPos = new Vector3(0.5f, inGameCamera.position.y + playersRespawnPosition, inGameCamera.position.z);
-            Vector3 respawnPositionSnap = SnapToGrid(respawnPos);
-            respawnPosition = new Vector3(0, respawnPositionSnap.y, respawnPos.z);
             Gizmos.DrawLine(respawnPosition + new Vector3(-horizontal, 0), respawnPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
 
             // DEATH LINE
-
             Gizmos.color = Color.blue;
-            deathPosition = new Vector3(0, inGameCamera.position.y + playersDeathPosition, inGameCamera.position.z);
             Gizmos.DrawLine(deathPosition + new Vector3(-horizontal, 0), deathPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
 
             // FINISH LINE
-
             Gizmos.color = Color.white;
+            // FINISH LINE
             Vector3 finishPos = new Vector3(0.5f, inGameCamera.position.y + playersFinishPosition, inGameCamera.position.z);
             Vector3 finishPositionSnap = SnapToGrid(finishPos);
             Vector3 finishPosition = new Vector3(0, finishPositionSnap.y, finishPos.z);
@@ -677,21 +721,16 @@ namespace MoleSurvivor
             //---------------------------------------------------------------------------------------
 
             // OUT OF SIDE BOUNDS LINE
-
             Gizmos.color = Color.blue;
-
             Vector3 boundSidePositionLeft = new Vector3(-playersSideBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionLeft + new Vector3(0, -vertical), boundSidePositionLeft + new Vector3(0, vertical));
-
             Vector3 boundSidePositionRight = new Vector3(playersSideBoundPosition, inGameCamera.position.y, inGameCamera.position.z);
             Gizmos.DrawLine(boundSidePositionRight + new Vector3(0, -vertical), boundSidePositionRight + new Vector3(0, vertical));
 
-            // OUT OF BOTTOM BOUNDS LINE
+            //---------------------------------------------------------------------------------------
 
+            // OUT OF BOTTOM BOUNDS LINE
             Gizmos.color = Color.blue;
-            Vector3 boundBottomPos = new Vector3(0.5f, inGameCamera.position.y + playersBottomBoundPosition, inGameCamera.position.z);
-            Vector3 boundBottomPositionSnap = SnapToGrid(boundBottomPos);
-            boundBottomPosition = new Vector3(0, boundBottomPositionSnap.y, boundBottomPos.z);
             Gizmos.DrawLine(boundBottomPosition + new Vector3(-horizontal, 0), boundBottomPosition + new Vector3(horizontal, 0));
 
             //---------------------------------------------------------------------------------------
@@ -708,5 +747,6 @@ namespace MoleSurvivor
             }
         }
 
+        #endregion
     }
 }

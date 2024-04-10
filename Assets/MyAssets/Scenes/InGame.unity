@@ -7328,7 +7328,7 @@ MonoBehaviour:
   playersDeathPosition: 13.65
   playersSideBoundPosition: 11.86
   playersBottomBoundPosition: -12.2
-  playersFinishPosition: -11
+  playersFinishPosition: -8.26
   playerHealthHeightLocation: -416.17
   playerMoveSpeed: 10
   playerRotateSpeed: 0.1
