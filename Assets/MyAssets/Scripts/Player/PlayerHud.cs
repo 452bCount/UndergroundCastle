@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 public class PlayerHud : MonoBehaviour
 {
     [SerializeField] public TextMeshProUGUI playerText;
+    [SerializeField] public TextMeshProUGUI lifeText;
     [SerializeField] public Transform health;
     [SerializeField] public List<Image> brightHubColor;
     [SerializeField] public List<Image> darkHubColor;

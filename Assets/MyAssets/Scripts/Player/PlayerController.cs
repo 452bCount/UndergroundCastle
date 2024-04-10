@@ -58,7 +58,7 @@ namespace MoleSurvivor
                 playerHud.SetPlayerColor(playerColor);
                 maxHealth = currentHealth;
                 playerHud.UpdateHP(currentHealth, maxHealth);
-                playerHud.playerText.text = $"P{playerId + 1}";
+                playerHud.playerText.text = $"PLAYER {playerId + 1}";
                 playerHud.gameObject.SetActive(true);
             }
         }
