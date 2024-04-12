@@ -94,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   min: 5
   max: 10
+  currentInt: 0
 --- !u!1 &5112407070102176215
 GameObject:
   m_ObjectHideFlags: 0

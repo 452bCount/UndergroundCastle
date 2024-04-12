@@ -6,16 +6,23 @@ namespace MoleSurvivor
 {
     public class TrapElec : Trap
     {
-        public Transform colliderTransform;
+        public BoxCollider colliderTransform;
         public List<Vector3> colliderMove;
         public float waitTime = 1.0f; // Delay between moves, in seconds
+        int index = 0;
 
         private Coroutine storeCoroutine;
 
-        //protected override void StartCall(Transform cPlayer)
-        //{
-        //    StartCoroutine(CorUpdate());
-        //}
+        protected override void StartCall(Transform cPlayer)
+        {
+            //if (checkBeforeOrAfter != true)
+            //{
+            //    cPlayer.GetComponent<PlayerController>().isAllowedToMove = false;
+            //    cPlayer.GetComponent<PlayerController>()._inputM = new Vector2(0, 0);
+            //    cPlayer.GetComponent<PlayerController>().targetPos = cPlayer.transform.position;
+            //    cPlayer.GetComponent<PlayerController>().isAllowedToMove = true;
+            //}
+        }
 
         public void Start()
         {
@@ -24,7 +31,7 @@ namespace MoleSurvivor
 
         public IEnumerator CorUpdate()
         {
-            int index = 0; // Start at the first position
+            index = 0; // Start at the first position
             while (true) // Loop indefinitely
             {
                 SetEnemyDestroy();
@@ -33,7 +40,7 @@ namespace MoleSurvivor
                 {
                     yield break; // Exit if there are no positions to move to
                 }
-                colliderTransform.position = transform.position + colliderMove[index % colliderMove.Count]; // Move to the next position
+                colliderTransform.center = colliderMove[index % colliderMove.Count]; // Move to the next position
                 index++; // Increment index for the next position
                 yield return new WaitForSeconds(waitTime); // Wait for the specified time before continuing
             }
@@ -66,7 +73,7 @@ namespace MoleSurvivor
             }
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(colliderTransform.position, 0.35f);
+            Gizmos.DrawWireSphere(transform.position + colliderMove[index % colliderMove.Count], 0.35f);
         }
     }
 }
