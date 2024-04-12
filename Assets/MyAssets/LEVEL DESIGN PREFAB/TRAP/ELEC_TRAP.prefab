@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4411597769421623535}
   - component: {fileID: 2918919637502543791}
   m_Layer: 0
-  m_Name: Collider
+  m_Name: COLLIDERTRANSFORM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6340479957543277897}
   - component: {fileID: 2159944917145750507}
-  - component: {fileID: 6810070958598825208}
   - component: {fileID: 6920246621756213327}
   m_Layer: 0
   m_Name: ELEC_TRAP
@@ -179,19 +178,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &6810070958598825208
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6340479957543277898}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6920246621756213327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39a9fee0100396a4ab4a6bf37b2eeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colliderTransform: {fileID: 6810070958598825208}
+  colliderCenter: {fileID: 2159944917145750507}
+  colliderMoveAround: {fileID: 2918919637502543791}
+  colliderTransform: {fileID: 4411597769421623535}
   colliderMove:
   - {x: 0, y: 2, z: 0}
   - {x: 1, y: 1, z: 0}

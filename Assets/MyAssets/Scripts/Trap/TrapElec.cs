@@ -6,22 +6,32 @@ namespace MoleSurvivor
 {
     public class TrapElec : Trap
     {
-        public BoxCollider colliderTransform;
+        public BoxCollider colliderCenter;
+        public BoxCollider colliderMoveAround;
+        public Transform colliderTransform;
         public List<Vector3> colliderMove;
         public float waitTime = 1.0f; // Delay between moves, in seconds
-        int index = 0;
 
+        public float damageToPlayer = 1f;
+
+        Transform currentPlayer;
         private Coroutine storeCoroutine;
 
         protected override void StartCall(Transform cPlayer)
         {
-            //if (checkBeforeOrAfter != true)
-            //{
-            //    cPlayer.GetComponent<PlayerController>().isAllowedToMove = false;
-            //    cPlayer.GetComponent<PlayerController>()._inputM = new Vector2(0, 0);
-            //    cPlayer.GetComponent<PlayerController>().targetPos = cPlayer.transform.position;
-            //    cPlayer.GetComponent<PlayerController>().isAllowedToMove = true;
-            //}
+            currentPlayer = cPlayer;
+
+            // Apply Logic based on which collider was triggered
+            if (colliderCenter != null && colliderCenter.bounds.Contains(cPlayer.GetComponent<PlayerController>().targetPos))
+            {
+                if (checkBeforeOrAfter != true)
+                {
+                    cPlayer.GetComponent<PlayerController>().isAllowedToMove = false;
+                    cPlayer.GetComponent<PlayerController>()._inputM = new Vector2(0, 0);
+                    cPlayer.GetComponent<PlayerController>().targetPos = cPlayer.transform.position;
+                    cPlayer.GetComponent<PlayerController>().isAllowedToMove = true;
+                }
+            }
         }
 
         public void Start()
@@ -31,16 +41,21 @@ namespace MoleSurvivor
 
         public IEnumerator CorUpdate()
         {
-            index = 0; // Start at the first position
+            int index = 0; // Start at the first position
             while (true) // Loop indefinitely
             {
                 SetEnemyDestroy();
+
+                if (colliderMoveAround != null && currentPlayer != null && colliderMoveAround.bounds.Contains(currentPlayer.position))
+                {
+                    currentPlayer.GetComponent<PlayerController>().TakeDamage(damageToPlayer);
+                }
 
                 if (colliderMove.Count == 0)
                 {
                     yield break; // Exit if there are no positions to move to
                 }
-                colliderTransform.center = colliderMove[index % colliderMove.Count]; // Move to the next position
+                colliderTransform.position = transform.position + colliderMove[index % colliderMove.Count]; // Move to the next position
                 index++; // Increment index for the next position
                 yield return new WaitForSeconds(waitTime); // Wait for the specified time before continuing
             }
@@ -73,7 +88,7 @@ namespace MoleSurvivor
             }
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position + colliderMove[index % colliderMove.Count], 0.35f);
+            Gizmos.DrawWireSphere(colliderTransform.position, 0.35f);
         }
     }
 }
