@@ -45,4 +45,6 @@ public class PlayerHud : MonoBehaviour
 
     public void respawnOffUI() { reloadUI.gameObject.SetActive(true); }
     public void respawnOnUI() { reloadUI.gameObject.SetActive(false); }
+
+    public void deathOnUI() { aliveUI.gameObject.SetActive(false); deathUI.gameObject.SetActive(true); }
 }

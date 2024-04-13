@@ -268,7 +268,7 @@ namespace MoleSurvivor
             // Set Player Update
             if (playerEach[pNumber].playerAlive == true) { playerEach[pNumber].playerController.SetUpdate(); SetPlayerDeath(playerEach[pNumber].playerController); }
             // Player Respawn
-            PlayersRespawn(pNumber);
+            //PlayersRespawn(pNumber);
             // Update each player's spawn timer if it's above 0
             if (playerEach[pNumber].playerDeath == true) { playerEach[pNumber].playerRespawnTimer -= Time.deltaTime; PlayersRespawn(pNumber); }
             // Update when bottom bound
@@ -277,7 +277,7 @@ namespace MoleSurvivor
 
         void PlayersRespawn(int player)
         {
-            if (playerEach[player].playerRespawnTimer <= 0)
+            if (playerEach[player].playerRespawnTimer <= 0 && playerEach[player].playerController.lifeLeft > 0)
             {
                 playerEach[player].playerController.playerHud.respawnOnUI();
                 playerEach[player].playerController.currentHealth = playerHealth;
@@ -301,6 +301,7 @@ namespace MoleSurvivor
             if (player.transform.position.y > deathPosition.y || player.currentHealth == 0)
             {
                 player.playerHud.respawnOffUI();
+                if (player.lifeLeft <= 1) { player.playerHud.deathOnUI(); }
                 player.TakeLife(-1);
                 player.GetComponent<CharacterMovement>().StopDotweenCoroutine();
                 player.transform.gameObject.SetActive(false);
