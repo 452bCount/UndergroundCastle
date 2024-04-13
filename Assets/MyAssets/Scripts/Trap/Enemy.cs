@@ -188,7 +188,7 @@ namespace MoleSurvivor
 
             if (transform.position.x < outerLeft || transform.position.x > outerRight || transform.position.y > outerTop)
             {
-                characterMovement.StopDotweenCoroutine();
+                characterMovement.DestroyDotweenCoroutine();
                 Destroy(this.gameObject);
             }
         }

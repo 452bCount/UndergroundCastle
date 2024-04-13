@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4411597769421623535}
   - component: {fileID: 2918919637502543791}
   m_Layer: 0
-  m_Name: COLLIDERTRANSFORM
+  m_Name: COLLIDER_TRANSFORM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -203,6 +203,7 @@ MonoBehaviour:
   - {x: -2, y: 0, z: 0}
   - {x: -1, y: 1, z: 0}
   waitTime: 0.25
+  damageToPlayer: 100
 --- !u!1 &7737524177532402361
 GameObject:
   m_ObjectHideFlags: 0

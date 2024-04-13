@@ -37,4 +37,12 @@ public class PlayerHud : MonoBehaviour
     {
         health.localScale = new Vector3((currentHealth/maxHealth), 1f);
     }
+
+    public void UpdateLife(int life)
+    {
+        lifeText.text = $"LIFE: X{life}";
+    }
+
+    public void respawnOffUI() { reloadUI.gameObject.SetActive(true); }
+    public void respawnOnUI() { reloadUI.gameObject.SetActive(false); }
 }

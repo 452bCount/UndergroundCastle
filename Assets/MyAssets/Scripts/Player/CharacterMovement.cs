@@ -9,6 +9,8 @@ namespace MoleSurvivor
     public class CharacterMovement : MonoBehaviour
     {
         private bool isMoving;
+        private Tween targetMoveTween;
+        private Tween targetRotateTween;
         private Coroutine rotateDelayCoroutine;
         private float distance;
 
@@ -41,7 +43,7 @@ namespace MoleSurvivor
                 float rotateDuration = rotationSpeed;
 
                 // Use DoTween for movement
-                _targetTransform.DOMove(targetPos, speedDuration)
+                targetMoveTween = _targetTransform.DOMove(targetPos, speedDuration)
                     .OnComplete(() =>
                     {
                         // Once movement is complete, set the final position
@@ -57,7 +59,7 @@ namespace MoleSurvivor
                     });
 
                 // Use DoTween for rotation
-                _targetOrientation.DORotate(targetRotate, rotateDuration)
+                targetRotateTween = _targetOrientation.DORotate(targetRotate, rotateDuration)
                     .OnComplete(() =>
                     {
                     // Once rotation is complete, set the final rotation
@@ -69,27 +71,33 @@ namespace MoleSurvivor
         private IEnumerator RotateDelayCoroutine(Transform targetOrientation, float rotateDuration, float rotationResetDelay)
         {
             yield return new WaitForSeconds(rotationResetDelay);
-            targetOrientation.DORotate(Vector3.zero, rotateDuration);
+            targetRotateTween = targetOrientation.DORotate(Vector3.zero, rotateDuration);
+        }
+
+        public void RespawnDotweenCoroutine(Vector3 respawnLocation)
+        {
+            if (targetMoveTween != null) { targetMoveTween.Play(); targetMoveTween = targetTransform.DOMove(respawnLocation, 0); }
+            if (targetRotateTween != null) { targetRotateTween.Play(); }
+        }
+
+        public void PlayDotweenCoroutine()
+        {
+            if (targetMoveTween != null) { targetMoveTween.Play(); }
+            if (targetRotateTween != null) { targetRotateTween.Play(); }
         }
 
         public void StopDotweenCoroutine()
         {
-            if (rotateDelayCoroutine != null)
-            {
-                StopCoroutine(rotateDelayCoroutine);
-                rotateDelayCoroutine = null; // Nullify the reference after stopping
-            }
+            if (rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
+            if (targetMoveTween != null) { targetMoveTween.Pause(); }
+            if (targetRotateTween != null) { targetRotateTween.Pause(); }
+        }
 
-            // Kill all DOTween animations for targetTransform and targetOrientation
-            if (targetTransform != null)
-            {
-                targetTransform.DOKill(); // This stops all DOTween animations on targetTransform
-            }
-
-            if (targetOrientation != null)
-            {
-                targetOrientation.DOKill(); // This stops all DOTween animations on targetTransform
-            }
+        public void DestroyDotweenCoroutine()
+        {
+            if (rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); rotateDelayCoroutine = null; }
+            if (targetMoveTween != null) { targetMoveTween.Kill(); targetMoveTween = null; }
+            if (targetRotateTween != null) { targetRotateTween.Kill(); targetRotateTween = null; }
         }
 
         public bool ReturnCheckIsMoving()

@@ -162,6 +162,10 @@ namespace MoleSurvivor
         [BoxGroup("BOX PLAYER", false)]
         public float playerHealth;
 
+        [TitleGroup("BOX PLAYER/START LIFE", "Set all the players life")]
+        [BoxGroup("BOX PLAYER", false)]
+        public int playerLife;
+
         [TitleGroup("BOX PLAYER/CHECK PLAYER ACTIVE", "Set how many players in the game")]
         [BoxGroup("BOX PLAYER")]
         public int playersActive;
@@ -220,6 +224,9 @@ namespace MoleSurvivor
                 playerCustom.playerController.playerColor = pColor;
                 playerCustom.playerController.playerHud = playerCustom.playerHealth;
 
+                playerCustom.playerController.lifeLeft = playerLife;
+                playerCustom.playerController.TakeLife(0);
+
                 playerCustom.playerController.SetStart();
             }
             // Set Player is Dead
@@ -272,6 +279,11 @@ namespace MoleSurvivor
         {
             if (playerEach[player].playerRespawnTimer <= 0)
             {
+                playerEach[player].playerController.playerHud.respawnOnUI();
+                playerEach[player].playerController.currentHealth = playerHealth;
+                playerEach[player].playerController.TakeDamage(0);
+                playerEach[player].playerController.GetComponent<CharacterMovement>().RespawnDotweenCoroutine(SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y)));
+                playerEach[player].playerController.orientation.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y));
                 playerEach[player].playerController.transform.gameObject.SetActive(true);
                 playerEach[player].playerController.IsCheckTile(playerEach[player].playerController.transform.position);
@@ -286,8 +298,11 @@ namespace MoleSurvivor
             // Check if the player is now inactive
             if (!player.transform.gameObject.activeSelf) { return; }
 
-            if (player.transform.position.y > InGameController.Instance.deathPosition.y)
+            if (player.transform.position.y > deathPosition.y || player.currentHealth == 0)
             {
+                player.playerHud.respawnOffUI();
+                player.TakeLife(-1);
+                player.GetComponent<CharacterMovement>().StopDotweenCoroutine();
                 player.transform.gameObject.SetActive(false);
 
                 switch (player.playerId)

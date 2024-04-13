@@ -18,6 +18,7 @@ namespace MoleSurvivor
 
         [ReadOnly] public float currentHealth;
         [ReadOnly] public float maxHealth;
+        [ReadOnly] public int lifeLeft;
         [ReadOnly] public float moveSpeed = 0f;
         [ReadOnly] public float rotateDuration = 0f;
         [ReadOnly] public float rotateDelay = 0f;
@@ -161,8 +162,13 @@ namespace MoleSurvivor
         {
             currentHealth -= damagePlayer;
             if (currentHealth <= 0) { currentHealth = 0; }
-
             if (playerHud != null) { playerHud.UpdateHP(currentHealth, maxHealth); }
+        }
+
+        public void TakeLife(int lifePlayer)
+        {
+            lifeLeft += lifePlayer;
+            if (playerHud != null) { playerHud.UpdateLife(lifeLeft); }
         }
 
         private void OnDrawGizmos()

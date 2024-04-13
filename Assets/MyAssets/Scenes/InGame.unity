@@ -820,6 +820,7 @@ MonoBehaviour:
   orientation: {fileID: 1048030166}
   currentHealth: 0
   maxHealth: 0
+  lifeLeft: 0
   moveSpeed: 0
   rotateDuration: 0
   rotateDelay: 0
@@ -1546,6 +1547,7 @@ MonoBehaviour:
   orientation: {fileID: 56461095}
   currentHealth: 0
   maxHealth: 0
+  lifeLeft: 0
   moveSpeed: 0
   rotateDuration: 0
   rotateDelay: 0
@@ -4825,6 +4827,7 @@ MonoBehaviour:
   orientation: {fileID: 1775966903}
   currentHealth: 0
   maxHealth: 0
+  lifeLeft: 0
   moveSpeed: 0
   rotateDuration: 0
   rotateDelay: 0
@@ -7105,6 +7108,7 @@ MonoBehaviour:
   orientation: {fileID: 1451995854}
   currentHealth: 0
   maxHealth: 0
+  lifeLeft: 0
   moveSpeed: 0
   rotateDuration: 0
   rotateDelay: 0
@@ -8723,6 +8727,7 @@ MonoBehaviour:
   playerRotateSpeed: 0.1
   playerRotateDelay: 2
   playerHealth: 10
+  playerLife: 3
   playersActive: 4
   soloMode: 1
   playerEach: []
