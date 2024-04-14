@@ -286,7 +286,6 @@ namespace MoleSurvivor
                 playerEach[player].playerController.TakeDamage(0);
 
                 playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y));
-                //playerEach[player].playerController.GetComponent<CharacterMovement>().RespawnDotweenCoroutine(SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y)));
                 playerEach[player].playerController.orientation.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
                 playerEach[player].playerController.transform.gameObject.SetActive(true);
@@ -313,21 +312,10 @@ namespace MoleSurvivor
                 playerEach[pNumber].playerController.playerHud.respawnOffUI();
                 if (playerEach[pNumber].playerController.lifeLeft <= 1) { playerEach[pNumber].playerController.playerHud.deathOnUI(); playersNotDead--; }
                 playerEach[pNumber].playerController.TakeLife(-1);
-                //playerEach[pNumber].playerController.GetComponent<CharacterMovement>().StopDotweenCoroutine();
 
                 playerEach[pNumber].playerAlive = false;
                 playerEach[pNumber].playerDeath = true;
                 playerEach[pNumber].playerController.transform.gameObject.SetActive(false);
-
-                //switch (playerEach[pNumber].playerController.playerId)
-                //{
-                //    case 0: playerEach[0].playerAlive = false; playerEach[0].playerDeath = true; break;
-                //    case 1: playerEach[1].playerAlive = false; playerEach[1].playerDeath = true; break;
-                //    case 2: playerEach[2].playerAlive = false; playerEach[2].playerDeath = true; break;
-                //    case 3: playerEach[3].playerAlive = false; playerEach[3].playerDeath = true; break;
-                //    // Default case if needed
-                //    default: break;
-                //}
             }
         }
         #endregion
