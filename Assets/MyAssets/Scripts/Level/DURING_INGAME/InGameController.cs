@@ -170,6 +170,8 @@ namespace MoleSurvivor
         [BoxGroup("BOX PLAYER")]
         public int playersActive;
 
+        public int playersNotDead;
+
         [TitleGroup("BOX PLAYER/SET MODE", "Singleplayer / Multiplayer")]
         [BoxGroup("BOX PLAYER")]
         public bool soloMode;
@@ -301,7 +303,7 @@ namespace MoleSurvivor
             if (player.transform.position.y > deathPosition.y || player.currentHealth == 0)
             {
                 player.playerHud.respawnOffUI();
-                if (player.lifeLeft <= 1) { player.playerHud.deathOnUI(); }
+                if (player.lifeLeft <= 1) { player.playerHud.deathOnUI(); playersNotDead--; }
                 player.TakeLife(-1);
                 player.GetComponent<CharacterMovement>().StopDotweenCoroutine();
                 player.transform.gameObject.SetActive(false);
@@ -331,6 +333,8 @@ namespace MoleSurvivor
 
         private void Start()
         {
+            playersNotDead = playersActive;
+
             // MAKE GRID COLUMNS
             #region GRID COLUMNS
             columns = playersActive;
@@ -440,7 +444,7 @@ namespace MoleSurvivor
                     seeFinishLine = true;
                 }
 
-                if (playersFinishPlace.Count >= playersActive)
+                if (playersFinishPlace.Count >= playersNotDead)
                 {
                     allPlayerFinishLevel = true;
                     setActiveUpdate = false;
