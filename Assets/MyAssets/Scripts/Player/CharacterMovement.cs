@@ -19,6 +19,8 @@ namespace MoleSurvivor
 
         public void Move( Action checkBeforeMove, Action checkAfterMove, Transform _targetTransform, Transform _targetOrientation, Vector3 targetPos, Vector3 targetRotate, float moveSpeed, float rotationSpeed, float delayRotation = 0, bool isAllowedToMove = true)
         {
+            if (transform.gameObject.activeSelf == false) { KillDotweenCoroutine(); return; }
+
             targetTransform = _targetTransform;
             targetOrientation = _targetOrientation;
 
@@ -51,11 +53,10 @@ namespace MoleSurvivor
                         isMoving = false;
                         checkAfterMove?.Invoke();
 
-                        // Check if not moving, then rotate orientation
-                        // Start the delay coroutine for orientation reset
-                        if (!isMoving && rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
-                        if (!isMoving) { rotateDelayCoroutine = StartCoroutine(RotateDelayCoroutine(_targetOrientation, rotateDuration, delayRotation)); }
-
+                        //Check if not moving, then rotate orientation
+                        //Start the delay coroutine for orientation reset
+                        //if (!isMoving && rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
+                        //if (!isMoving) { rotateDelayCoroutine = StartCoroutine(RotateDelayCoroutine(_targetOrientation, rotateDuration, delayRotation)); }
                     });
 
                 // Use DoTween for rotation
@@ -66,6 +67,8 @@ namespace MoleSurvivor
                     _targetOrientation.rotation = Quaternion.Euler(targetRotate);
                     });
             }
+
+            if (transform.gameObject.activeSelf == false) { KillDotweenCoroutine(); return; }
         }
 
         private IEnumerator RotateDelayCoroutine(Transform targetOrientation, float rotateDuration, float rotationResetDelay)
@@ -74,11 +77,11 @@ namespace MoleSurvivor
             targetRotateTween = targetOrientation.DORotate(Vector3.zero, rotateDuration);
         }
 
-        public void RespawnDotweenCoroutine(Vector3 respawnLocation)
-        {
-            if (targetMoveTween != null) { targetMoveTween.Play(); targetMoveTween = targetTransform.DOMove(respawnLocation, 0); }
-            if (targetRotateTween != null) { targetRotateTween.Play(); }
-        }
+        //public void RespawnDotweenCoroutine(Vector3 respawnLocation)
+        //{
+        //    if (targetMoveTween != null) { targetMoveTween.Play(); targetMoveTween = targetTransform.DOMove(respawnLocation, 0); }
+        //    if (targetRotateTween != null) { targetRotateTween.Play(); }
+        //}
 
         public void PlayDotweenCoroutine()
         {
@@ -88,9 +91,16 @@ namespace MoleSurvivor
 
         public void StopDotweenCoroutine()
         {
-            if (rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
             if (targetMoveTween != null) { targetMoveTween.Pause(); }
             if (targetRotateTween != null) { targetRotateTween.Pause(); }
+            if (rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
+        }
+
+        public void KillDotweenCoroutine()
+        {
+            if (targetMoveTween != null) { targetMoveTween.Kill(); }
+            if (targetRotateTween != null) { targetRotateTween.Kill(); }
+            if (rotateDelayCoroutine != null) { StopCoroutine(rotateDelayCoroutine); }
         }
 
         public void DestroyDotweenCoroutine()

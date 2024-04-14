@@ -36,6 +36,10 @@ namespace MoleSurvivor
 
         [HideInInspector] public float horizontalInput;
         [HideInInspector] public float prevHorizontalInput;
+
+        [HideInInspector] public float verticalInput;
+        [HideInInspector] public float prevVerticalInput;
+
         [HideInInspector] public bool finishLine;
         [ReadOnly] public bool seeFinishLine;
         [HideInInspector] public float boundarySide;
@@ -67,22 +71,27 @@ namespace MoleSurvivor
         void CheckForInput()
         {
             horizontalInput = (finishLine == true) ? horizontalInput : player.GetAxis("LJ Horizontal");
+            verticalInput = (finishLine == true) ? -1 : player.GetAxis("LJ Vertical");
 
             // Directly use horizontalInput for movement
-            if (horizontalInput != 0)
+            if (horizontalInput != 0 && verticalInput != 0)
             {
                 // Update the lastDirection based on horizontalInput if it's not 0
                 if (horizontalInput > 0) { horizontalInput = prevHorizontalInput = 1; } else if (horizontalInput < 0) { horizontalInput = prevHorizontalInput = -1; }
-                int direction = (singleMovement == true) ? (int)horizontalInput : (int)prevHorizontalInput; // -1 for left, 1 for right
-                _inputM = new Vector2(direction * 1, -1);
-                _inputR = direction * -90;
+                int hDirection = (singleMovement == true) ? (int)horizontalInput : (int)prevHorizontalInput; // -1 for left, 1 for right
+
+                if (verticalInput > 0) { verticalInput = prevVerticalInput = 1; } else if (verticalInput < 0) { verticalInput = prevVerticalInput = -1; }
+                int vDirection = (singleMovement == true) ? (int)verticalInput : (int)prevVerticalInput; // -1 for down, 1 for up
+
+                _inputM = new Vector2(hDirection * 1, vDirection);
+                _inputR = hDirection * -90;
             }
             else if (horizontalInput == 0 && finishLine == true)
             {
                 singleMovement = false;
-                int direction = (int)prevHorizontalInput; // -1 for left, 1 for right
-                _inputM = new Vector2(direction * 1, -1);
-                _inputR = direction * -90;
+                int hDirection = (int)prevHorizontalInput; // -1 for left, 1 for right
+                _inputM = new Vector2(hDirection * 1, -1);
+                _inputR = hDirection * -90;
             }
         }
 

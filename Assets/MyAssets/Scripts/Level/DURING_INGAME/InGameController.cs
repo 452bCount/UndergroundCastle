@@ -268,7 +268,7 @@ namespace MoleSurvivor
         void PUpdates(int pNumber)
         {
             // Set Player Update
-            if (playerEach[pNumber].playerAlive == true) { playerEach[pNumber].playerController.SetUpdate(); SetPlayerDeath(playerEach[pNumber].playerController); }
+            if (playerEach[pNumber].playerAlive == true) { playerEach[pNumber].playerController.SetUpdate(); SetPlayerDeath(pNumber); }
             // Player Respawn
             //PlayersRespawn(pNumber);
             // Update each player's spawn timer if it's above 0
@@ -284,10 +284,13 @@ namespace MoleSurvivor
                 playerEach[player].playerController.playerHud.respawnOnUI();
                 playerEach[player].playerController.currentHealth = playerHealth;
                 playerEach[player].playerController.TakeDamage(0);
-                playerEach[player].playerController.GetComponent<CharacterMovement>().RespawnDotweenCoroutine(SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y)));
-                playerEach[player].playerController.orientation.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
                 playerEach[player].playerController.transform.position = SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y));
+                //playerEach[player].playerController.GetComponent<CharacterMovement>().RespawnDotweenCoroutine(SnapToGrid(new Vector3(GridColumns[player].x, respawnPosition.y)));
+                playerEach[player].playerController.orientation.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+
                 playerEach[player].playerController.transform.gameObject.SetActive(true);
+
                 playerEach[player].playerController.IsCheckTile(playerEach[player].playerController.transform.position);
                 playerEach[player].playerAlive = true;
                 playerEach[player].playerRespawnTimer = playerRespawnTimer;
@@ -295,28 +298,36 @@ namespace MoleSurvivor
             }
         }
 
-        void SetPlayerDeath(PlayerController player)
+        void SetPlayerDeath(int pNumber)
         {
             // Check if the player is now inactive
-            if (!player.transform.gameObject.activeSelf) { return; }
+            if (!playerEach[pNumber].playerController.transform.gameObject.activeSelf) { return; }
 
-            if (player.transform.position.y > deathPosition.y || player.currentHealth == 0)
+            if (playerEach[pNumber].playerController.transform.position.y > deathPosition.y && 
+                playerEach[pNumber].playerAlive == true &&
+                playerEach[pNumber].playerDeath == false || 
+                playerEach[pNumber].playerController.currentHealth == 0 && 
+                playerEach[pNumber].playerAlive == true &&
+                playerEach[pNumber].playerDeath == false)
             {
-                player.playerHud.respawnOffUI();
-                if (player.lifeLeft <= 1) { player.playerHud.deathOnUI(); playersNotDead--; }
-                player.TakeLife(-1);
-                player.GetComponent<CharacterMovement>().StopDotweenCoroutine();
-                player.transform.gameObject.SetActive(false);
+                playerEach[pNumber].playerController.playerHud.respawnOffUI();
+                if (playerEach[pNumber].playerController.lifeLeft <= 1) { playerEach[pNumber].playerController.playerHud.deathOnUI(); playersNotDead--; }
+                playerEach[pNumber].playerController.TakeLife(-1);
+                //playerEach[pNumber].playerController.GetComponent<CharacterMovement>().StopDotweenCoroutine();
 
-                switch (player.playerId)
-                {
-                    case 0: playerEach[0].playerAlive = false; playerEach[0].playerDeath = true; break;
-                    case 1: playerEach[1].playerAlive = false; playerEach[1].playerDeath = true; break;
-                    case 2: playerEach[2].playerAlive = false; playerEach[2].playerDeath = true; break;
-                    case 3: playerEach[3].playerAlive = false; playerEach[3].playerDeath = true; break;
-                    // Default case if needed
-                    default: break;
-                }
+                playerEach[pNumber].playerAlive = false;
+                playerEach[pNumber].playerDeath = true;
+                playerEach[pNumber].playerController.transform.gameObject.SetActive(false);
+
+                //switch (playerEach[pNumber].playerController.playerId)
+                //{
+                //    case 0: playerEach[0].playerAlive = false; playerEach[0].playerDeath = true; break;
+                //    case 1: playerEach[1].playerAlive = false; playerEach[1].playerDeath = true; break;
+                //    case 2: playerEach[2].playerAlive = false; playerEach[2].playerDeath = true; break;
+                //    case 3: playerEach[3].playerAlive = false; playerEach[3].playerDeath = true; break;
+                //    // Default case if needed
+                //    default: break;
+                //}
             }
         }
         #endregion
@@ -397,7 +408,7 @@ namespace MoleSurvivor
             //SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
-            //StartCoroutine(MoveCameraCoroutine());
+            StartCoroutine(MoveCameraCoroutine());
 
             // Start the coroutine to move the camera map
             StartCoroutine(MoveCameraMapCoroutine());
