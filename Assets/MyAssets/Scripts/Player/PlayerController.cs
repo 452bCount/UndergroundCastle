@@ -26,7 +26,7 @@ namespace MoleSurvivor
         [ReadOnly] public bool singleMovement;
 
         [HideInInspector] public Vector3 targetPos;
-        [HideInInspector] public Vector2 _inputM;
+        [ReadOnly] public Vector2 _inputM;
         private float _inputR;
 
         [ReadOnly] public Color playerColor;
@@ -34,13 +34,13 @@ namespace MoleSurvivor
         [HideInInspector] public CharacterMovement characterMovement;
         [ReadOnly] public bool isAllowedToMove = true;
 
-        [HideInInspector] public float horizontalInput;
-        [HideInInspector] public float prevHorizontalInput;
+        [ReadOnly] public float horizontalInput;
+        [ReadOnly] public float prevHorizontalInput;
 
-        [HideInInspector] public float verticalInput;
-        [HideInInspector] public float prevVerticalInput;
+        [ReadOnly] public float verticalInput;
+        [ReadOnly] public float prevVerticalInput;
 
-        [HideInInspector] public bool finishLine;
+        [ReadOnly] public bool finishLine;
         [ReadOnly] public bool seeFinishLine;
         [HideInInspector] public float boundarySide;
         [HideInInspector] public float boundaryBottom;
@@ -74,7 +74,7 @@ namespace MoleSurvivor
             verticalInput = (finishLine == true) ? -1 : player.GetAxis("LJ Vertical");
 
             // Directly use horizontalInput for movement
-            if (horizontalInput != 0 && verticalInput != 0)
+            if (horizontalInput != 0 && verticalInput != 0 && finishLine == false)
             {
                 // Update the lastDirection based on horizontalInput if it's not 0
                 if (horizontalInput > 0) { horizontalInput = prevHorizontalInput = 1; } else if (horizontalInput < 0) { horizontalInput = prevHorizontalInput = -1; }
@@ -86,7 +86,7 @@ namespace MoleSurvivor
                 _inputM = new Vector2(hDirection * 1, vDirection);
                 _inputR = hDirection * -90;
             }
-            else if (horizontalInput == 0 && finishLine == true)
+            else if (finishLine == true)
             {
                 singleMovement = false;
                 int hDirection = (int)prevHorizontalInput; // -1 for left, 1 for right

@@ -833,6 +833,8 @@ MonoBehaviour:
   isAllowedToMove: 1
   horizontalInput: 0
   prevHorizontalInput: 0
+  verticalInput: 0
+  prevVerticalInput: 0
   finishLine: 0
   seeFinishLine: 0
   boundarySide: 0
@@ -1560,6 +1562,8 @@ MonoBehaviour:
   isAllowedToMove: 1
   horizontalInput: 0
   prevHorizontalInput: 0
+  verticalInput: 0
+  prevVerticalInput: 0
   finishLine: 0
   seeFinishLine: 0
   boundarySide: 0
@@ -4840,6 +4844,8 @@ MonoBehaviour:
   isAllowedToMove: 1
   horizontalInput: 0
   prevHorizontalInput: 0
+  verticalInput: 0
+  prevVerticalInput: 0
   finishLine: 0
   seeFinishLine: 0
   boundarySide: 0
@@ -7121,6 +7127,8 @@ MonoBehaviour:
   isAllowedToMove: 1
   horizontalInput: 0
   prevHorizontalInput: 0
+  verticalInput: 0
+  prevVerticalInput: 0
   finishLine: 0
   seeFinishLine: 0
   boundarySide: 0
@@ -8731,6 +8739,9 @@ MonoBehaviour:
   playersActive: 3
   playersNotDead: 0
   soloMode: 1
+  finishEvent:
+    m_PersistentCalls:
+      m_Calls: []
   playerEach: []
   startPosition: {x: 0, y: 8, z: -17}
   respawnPosition: {x: 0, y: 7, z: -17}

@@ -5,6 +5,7 @@ using System;
 using TMPro;
 using DG.Tweening;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 
 namespace MoleSurvivor
 {
@@ -169,12 +170,15 @@ namespace MoleSurvivor
         [TitleGroup("BOX PLAYER/CHECK PLAYER ACTIVE", "Set how many players in the game")]
         [BoxGroup("BOX PLAYER")]
         public int playersActive;
-
+        [HideInInspector] 
         public int playersNotDead;
 
         [TitleGroup("BOX PLAYER/SET MODE", "Singleplayer / Multiplayer")]
         [BoxGroup("BOX PLAYER")]
         public bool soloMode;
+
+        // Create a UnityEvent that will be triggered when the event occurs
+        public UnityEvent finishEvent;
         #endregion
         //-----------------------------------------------------------------------------------------------------------------------------------------
         //NEXT
@@ -445,6 +449,7 @@ namespace MoleSurvivor
 
                 if (playersFinishPlace.Count >= playersNotDead)
                 {
+                    if (allPlayerFinishLevel != true) { finishEvent.Invoke(); }
                     allPlayerFinishLevel = true;
                     setActiveUpdate = false;
                 }
