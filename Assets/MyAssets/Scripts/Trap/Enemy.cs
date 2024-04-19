@@ -23,6 +23,7 @@ namespace MoleSurvivor
         public float gizmoLength = 15f;
 
         private bool setActive;
+        private bool setDeath;
 
         private Vector2 _inputM;
         private float _inputR;
@@ -66,65 +67,72 @@ namespace MoleSurvivor
 
         void Update()
         {
-            for (int i = 0; i < InGameController.Instance.playerEach.Count; i++)
+            if (setDeath == false)
             {
-                if ((InGameController.Instance.playerEach[i].playerController.gameObject.transform.position.y + detectPlayer) < this.transform.position.y)
+                for (int i = 0; i < InGameController.Instance.playerEach.Count; i++)
                 {
-                    setActive = true;
-                }
-            }
-
-            if (setActive == true)
-            {
-                #region InputType
-                switch (moveType)
-                {
-                    case MovementType.LeftDown:
-                        // Code to execute when moveType is LeftDown
-                        InputLeftDownUpdate();
-                        break;
-                    case MovementType.LeftUp:
-                        // Code to execute when moveType is LeftUp
-                        InputLeftUpUpdate();
-                        break;
-                    case MovementType.RightDown:
-                        // Code to execute when moveType is RightDown
-                        InputRightDownUpdate();
-                        break;
-                    case MovementType.RightUp:
-                        // Code to execute when moveType is RightUp
-                        InputRightUpUpdate();
-                        break;
-                    default:
-                        // Optional: Code to execute if none of the above cases match
-                        break;
-                }
-                #endregion
-
-                #region Move
-                if (!characterMovement.ReturnCheckIsMoving())
-                {
-                    if (_inputM != Vector2.zero) // I only put this so it could stop when pause
+                    if ((InGameController.Instance.playerEach[i].playerController.gameObject.transform.position.y + detectPlayer) < this.transform.position.y)
                     {
-                        // Calculate the direction based on the current rotation
-                        Vector3 direction = _inputM;
-
-                        // Update targetPos based on the direction
-                        targetPos = transform.position + direction;
-                        targetPos = new Vector3Int(Mathf.RoundToInt(targetPos.x), Mathf.RoundToInt(targetPos.y), Mathf.RoundToInt(targetPos.z));
-
-                        // Check Before Move
-                        IsCheckTile(targetPos);
-
-                        // Move
-                        //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
-                        characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                        setActive = true;
                     }
-
-                    SetEnemyDestroy();
                 }
-                #endregion
 
+                if (setActive == true)
+                {
+                    #region InputType
+                    switch (moveType)
+                    {
+                        case MovementType.LeftDown:
+                            // Code to execute when moveType is LeftDown
+                            InputLeftDownUpdate();
+                            break;
+                        case MovementType.LeftUp:
+                            // Code to execute when moveType is LeftUp
+                            InputLeftUpUpdate();
+                            break;
+                        case MovementType.RightDown:
+                            // Code to execute when moveType is RightDown
+                            InputRightDownUpdate();
+                            break;
+                        case MovementType.RightUp:
+                            // Code to execute when moveType is RightUp
+                            InputRightUpUpdate();
+                            break;
+                        default:
+                            // Optional: Code to execute if none of the above cases match
+                            break;
+                    }
+                    #endregion
+
+                    #region Move
+                    if (!characterMovement.ReturnCheckIsMoving())
+                    {
+                        if (_inputM != Vector2.zero) // I only put this so it could stop when pause
+                        {
+                            // Calculate the direction based on the current rotation
+                            Vector3 direction = _inputM;
+
+                            // Update targetPos based on the direction
+                            targetPos = transform.position + direction;
+                            targetPos = new Vector3Int(Mathf.RoundToInt(targetPos.x), Mathf.RoundToInt(targetPos.y), Mathf.RoundToInt(targetPos.z));
+
+                            // Check Before Move
+                            IsCheckTile(targetPos);
+
+                            // Move
+                            //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
+                            characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                        }
+
+                        SetEnemyDestroy();
+                    }
+                    #endregion
+                }
+
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -188,8 +196,12 @@ namespace MoleSurvivor
 
             if (transform.position.x < outerLeft || transform.position.x > outerRight || transform.position.y > outerTop)
             {
-                characterMovement.DestroyDotweenCoroutine();
-                Destroy(this.gameObject);
+                // Kill DOTween tweens
+                characterMovement.KillDotweenCoroutine();
+
+                // Set death flag and deactivate GameObject
+                setDeath = true;
+                gameObject.SetActive(false);
             }
         }
 
