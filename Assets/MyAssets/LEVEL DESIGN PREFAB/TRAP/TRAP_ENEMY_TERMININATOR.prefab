@@ -277,10 +277,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e467c0574afb2ad4d8202be60998b3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 6569682421257597500}
+  orientation: {fileID: 6569682422085571631}
+  orientationCheat: {fileID: 6569682421257597500}
   moveSpeed: 5
   rotateSpeed: 10
   moveType: 2
+  rotateForward: 1
   detectPlayer: 0
   damageToPlayer: 1
   gizmoLength: 15

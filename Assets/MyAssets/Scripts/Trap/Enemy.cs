@@ -8,12 +8,15 @@ namespace MoleSurvivor
     public class Enemy : MonoBehaviour
     {
         public Transform orientation;
+        public Transform orientationCheat;
 
         [Header("MOVEMENT & ROTATION")]
         public float moveSpeed = 5f;
         public float rotateSpeed = 10f;
         public enum MovementType { None, LeftDown, LeftUp, RightDown, RightUp };
         public MovementType moveType;
+        public bool rotateForward;
+        public bool scaleFlip;
 
         [Header("DETECT & DAMAGE")]
         public float detectPlayer = 0f;
@@ -27,6 +30,8 @@ namespace MoleSurvivor
 
         private Vector2 _inputM;
         private float _inputR;
+        private float _inputR2;
+        private float _inputS;
 
         private Vector3 targetPos;
 
@@ -37,6 +42,37 @@ namespace MoleSurvivor
             characterMovement = GetComponent<CharacterMovement>();
             targetPos = transform.position;
             IsCheckTile(targetPos);
+
+            #region InputType
+            switch (moveType)
+            {
+                case MovementType.LeftDown:
+                    // Code to execute when moveType is LeftDown
+                    InputLeftDownUpdate();
+                    break;
+                case MovementType.LeftUp:
+                    // Code to execute when moveType is LeftUp
+                    InputLeftUpUpdate();
+                    break;
+                case MovementType.RightDown:
+                    // Code to execute when moveType is RightDown
+                    InputRightDownUpdate();
+                    break;
+                case MovementType.RightUp:
+                    // Code to execute when moveType is RightUp
+                    InputRightUpUpdate();
+                    break;
+                default:
+                    // Optional: Code to execute if none of the above cases match
+                    break;
+            }
+
+            orientationCheat.rotation = Quaternion.Euler(new Vector3(rotateForward ? _inputR2 : 0, _inputR, 0));
+            if (scaleFlip == true) { orientationCheat.localScale = new Vector3(_inputS, 1, 1); }
+
+            #endregion
+            orientationCheat.rotation = Quaternion.Euler(new Vector3(rotateForward ? _inputR2 : 0, _inputR, 0));
+            if (scaleFlip == true) { orientationCheat.localScale = new Vector3(_inputS, 1, 1); }
         }
 
         #region InputMovementControl
@@ -44,24 +80,32 @@ namespace MoleSurvivor
         {
             _inputM = new Vector2(-1, -1);
             _inputR = 90f;
+            _inputR2 = -45f;
+            _inputS = 1f;
         }
 
         public void InputLeftUpUpdate()
         {
             _inputM = new Vector2(-1, 1);
             _inputR = 90f;
+            _inputR2 = 45f;
+            _inputS = 1f;
         }
 
         public void InputRightDownUpdate()
         {
             _inputM = new Vector2(1, -1);
             _inputR = -90f;
+            _inputR2 = -45f;
+            _inputS = -1f;
         }
 
         public void InputRightUpUpdate()
         {
             _inputM = new Vector2(1, 1);
             _inputR = -90f;
+            _inputR2 = 45f;
+            _inputS = -1f;
         }
         #endregion
 
@@ -102,6 +146,10 @@ namespace MoleSurvivor
                             // Optional: Code to execute if none of the above cases match
                             break;
                     }
+
+                    orientationCheat.rotation = Quaternion.Euler(new Vector3(rotateForward ? _inputR2 : 0, _inputR, 0));
+                    if (scaleFlip == true) { orientationCheat.localScale = new Vector3(_inputS, 1, 1); }
+
                     #endregion
 
                     #region Move

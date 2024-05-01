@@ -48,15 +48,23 @@ namespace MoleSurvivor
 
                 if (colliderMoveAround != null && currentPlayer != null && colliderMoveAround.bounds.Contains(currentPlayer.position))
                 {
-                    currentPlayer.GetComponent<PlayerController>().TakeDamage(damageToPlayer);
+                    currentPlayer.GetComponent<PlayerController>().TakeDamage(damageToPlayer/2);
                 }
 
                 if (colliderMove.Count == 0)
                 {
                     yield break; // Exit if there are no positions to move to
                 }
+
                 colliderTransform.position = transform.position + colliderMove[index % colliderMove.Count]; // Move to the next position
+
+                if (colliderMoveAround != null && currentPlayer != null && colliderMoveAround.bounds.Contains(currentPlayer.position))
+                {
+                    currentPlayer.GetComponent<PlayerController>().TakeDamage(damageToPlayer/2);
+                }
+
                 index++; // Increment index for the next position
+
                 yield return new WaitForSeconds(waitTime); // Wait for the specified time before continuing
             }
         }

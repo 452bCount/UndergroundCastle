@@ -27,7 +27,7 @@ namespace MoleSurvivor
 
         [HideInInspector] public Vector3 targetPos;
         [ReadOnly] public Vector2 _inputM;
-        private float _inputR;
+        [ReadOnly] public float _inputR;
 
         [ReadOnly] public Color playerColor;
         [ReadOnly] public PlayerHud playerHud;

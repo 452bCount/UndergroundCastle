@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1748844004613907309}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 0, z: 0.025}
   m_LocalScale: {x: 60, y: 60, z: 60}
   m_ConstrainProportionsScale: 1
@@ -31,7 +31,7 @@ Transform:
   - {fileID: 929168975962174426}
   m_Father: {fileID: 6569682421257597500}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: -90, z: 0}
 --- !u!1 &5005215542860272440
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,10 +277,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e467c0574afb2ad4d8202be60998b3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 6569682421257597500}
+  orientation: {fileID: 6569682422085571631}
+  orientationCheat: {fileID: 6569682421257597500}
   moveSpeed: 5
   rotateSpeed: 10
-  moveType: 2
+  moveType: 1
+  rotateForward: 1
+  scaleFlip: 1
   detectPlayer: 0
   damageToPlayer: 1
   gizmoLength: 15

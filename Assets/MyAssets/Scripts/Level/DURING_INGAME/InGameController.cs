@@ -400,7 +400,7 @@ namespace MoleSurvivor
             //SetPlayers(playersActive);
 
             // Start the coroutine to move the camera
-            StartCoroutine(MoveCameraCoroutine());
+            //StartCoroutine(MoveCameraCoroutine());
 
             // Start the coroutine to move the camera map
             StartCoroutine(MoveCameraMapCoroutine());

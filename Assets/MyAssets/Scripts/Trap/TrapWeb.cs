@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace MoleSurvivor
 {
@@ -12,6 +13,8 @@ namespace MoleSurvivor
         private Transform player;
         private bool canGoOpposite = true;
         bool inUseSinglePLayer;
+
+        public UnityEvent gotTrap;
 
         private bool cBeforeOrAfter;
 
@@ -28,7 +31,8 @@ namespace MoleSurvivor
             }
 
             if (checkBeforeOrAfter == true) 
-            { 
+            {
+                gotTrap.Invoke();
                 currentInt = Random.Range(min, max + 1); 
                 player = cPlayer; StartCoroutine(CorUpdate());
                 inUseSinglePLayer = true;
