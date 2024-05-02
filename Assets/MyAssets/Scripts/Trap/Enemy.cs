@@ -169,7 +169,7 @@ namespace MoleSurvivor
 
                             // Move
                             //StartCoroutine(characterMovement.Move(null, null, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed));
-                            characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed);
+                            characterMovement.Move(null, CheckAfterMove, transform, orientation, targetPos, new Vector3(0, _inputR, 0), moveSpeed, rotateSpeed, 0, true, false);
                         }
 
                         SetEnemyDestroy();
@@ -249,7 +249,9 @@ namespace MoleSurvivor
 
                 // Set death flag and deactivate GameObject
                 setDeath = true;
+                characterMovement.KillDotweenCoroutine();
                 gameObject.SetActive(false);
+                characterMovement.KillDotweenCoroutine();
             }
         }
 

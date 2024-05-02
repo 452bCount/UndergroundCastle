@@ -17,7 +17,7 @@ namespace MoleSurvivor
         private Transform targetTransform;
         private Transform targetOrientation;
 
-        public void Move( Action checkBeforeMove, Action checkAfterMove, Transform _targetTransform, Transform _targetOrientation, Vector3 targetPos, Vector3 targetRotate, float moveSpeed, float rotationSpeed, float delayRotation = 0, bool isAllowedToMove = true)
+        public void Move( Action checkBeforeMove, Action checkAfterMove, Transform _targetTransform, Transform _targetOrientation, Vector3 targetPos, Vector3 targetRotate, float moveSpeed, float rotationSpeed, float delayRotation = 0, bool isAllowedToMove = true, bool isPlayer = true)
         {
             if (transform.gameObject.activeSelf == false) { KillDotweenCoroutine(); return; }
 
@@ -58,13 +58,16 @@ namespace MoleSurvivor
                         if (!isMoving && transform.gameObject.activeSelf == true) { rotateDelayCoroutine = StartCoroutine(RotateDelayCoroutine(_targetOrientation, rotateDuration, delayRotation)); }
                     });
 
-                // Use DoTween for rotation
-                targetRotateTween = _targetOrientation.DORotate(targetRotate, rotateDuration)
-                    .OnComplete(() =>
-                    {
+                if (isPlayer)
+                {
+                    // Use DoTween for rotation
+                    targetRotateTween = _targetOrientation.DORotate(targetRotate, rotateDuration)
+                        .OnComplete(() =>
+                        {
                         // Once rotation is complete, set the final rotation
                         _targetOrientation.rotation = Quaternion.Euler(targetRotate);
-                    });
+                        });
+                }
             }
 
             if (transform.gameObject.activeSelf == false) { KillDotweenCoroutine(); return; }
