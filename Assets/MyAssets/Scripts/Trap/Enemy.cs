@@ -201,9 +201,9 @@ namespace MoleSurvivor
                     coll.TakeDamage(damageToPlayer);
                 }
 
-                if (c.GetComponent<Trap>() != null)
+                if (c.GetComponent<CTrap>() != null)
                 {
-                    Trap coll = c.GetComponent<Trap>();
+                    CTrap coll = c.GetComponent<CTrap>();
                     Destroy(coll.gameObject);
                 }
             }
