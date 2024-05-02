@@ -5866,9 +5866,9 @@ MonoBehaviour:
   actionPerform:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1759931034}
-        m_TargetAssemblyTypeName: OpenSubPanelOfStart, Assembly-CSharp
-        m_MethodName: OpenSubPanel
+      - m_Target: {fileID: 628817394}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
