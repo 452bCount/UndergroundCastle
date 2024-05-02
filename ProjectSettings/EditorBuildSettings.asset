@@ -6,9 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MyAssets/Scenes/MainMenu.unity
-    guid: 8f0cd776e189ae744bf4510c0245a5ee
-  - enabled: 1
-    path: Assets/MyAssets/Scenes/InGame.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/MyAssets/Scenes/Four Players scene/InGame WasteLand Four Player
+      2.unity
+    guid: ab596bf0847b2ae45a983ce972543e8d
   m_configObjects: {}

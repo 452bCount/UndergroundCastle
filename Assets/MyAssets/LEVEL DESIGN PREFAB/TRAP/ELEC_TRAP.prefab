@@ -1264,7 +1264,7 @@ MonoBehaviour:
   - {x: -2, y: 0, z: 0}
   - {x: -1, y: 1, z: 0}
   waitTime: 0.25
-  damageToPlayer: 100
+  damageToPlayer: 10
 --- !u!1 &6471710868536216863
 GameObject:
   m_ObjectHideFlags: 0
